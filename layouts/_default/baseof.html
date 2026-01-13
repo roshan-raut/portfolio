@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{ partial "head.html" . }}
+    <body>
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">RR_DevOps</a>
+                <ul>
+                    <li><a href="/posts">/blog</a></li>
+                    <li><a href="/about">/resume</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="container">
+            {{ block "main" . }}{{ end }}
+        </main>
+
+        <footer>
+            <p>&copy; {{ now.Year }} Roshan Raut. Built with Hugo & GitHub Actions.</p>
+        </footer>
+    </body>
+</html>

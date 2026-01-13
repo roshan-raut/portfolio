@@ -1,0 +1,29 @@
+{{ define "main" }}
+<section class="hero">
+    <h1>Hello, I'm Roshan Raut.</h1>
+    <p class="subtitle">{{ .Site.Params.description }}</p>
+    <p class="bio">{{ .Site.Params.bio }}</p>
+    
+    <div class="social-links">
+        <a href="mailto:{{ .Site.Params.email }}"><i class="fas fa-envelope"></i> Email</a>
+        <a href="{{ .Site.Params.linkedin }}"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        <a href="/about" class="btn">View Full Resume</a>
+    </div>
+</section>
+
+<section class="latest-posts">
+    <h2><i class="fas fa-terminal"></i> Recent Engineering Logs</h2>
+    <div class="grid">
+        {{ range first 3 (where .Site.RegularPages "Section" "posts") }}
+            <article class="card">
+                <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                <span class="date">{{ .Date.Format "Jan 2, 2006" }}</span>
+                <p>{{ .Summary | truncate 120 }}</p>
+                <div class="tags">
+                    {{ range .Params.tags }}<span class="tag">#{{ . }}</span>{{ end }}
+                </div>
+            </article>
+        {{ end }}
+    </div>
+</section>
+{{ end }}
