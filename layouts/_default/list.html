@@ -1,0 +1,12 @@
+{{ define "main" }}
+<h1 style="border-bottom: 2px solid var(--primary); padding-bottom: 10px;">{{ .Title }}</h1>
+<div class="grid">
+    {{ range .Pages }}
+        <article class="card">
+            <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+            <span class="date" style="font-size:0.8rem; color:#94a3b8;">{{ .Date.Format "Jan 2, 2006" }}</span>
+            <p>{{ .Summary | truncate 120 }}</p>
+        </article>
+    {{ end }}
+</div>
+{{ end }}

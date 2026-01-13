@@ -1,0 +1,19 @@
+baseURL = 'https://roshan-raut.github.io/'
+languageCode = 'en-us'
+title = 'Roshan Raut | DevOps Engineer'
+theme = [] # We are using custom layouts, no external theme needed
+
+[params]
+  description = "DevOps | AWS | Azure | Terraform | CKAD"
+  bio = "Forward-thinking DevOps Engineer with strong expertise in CI/CD, Build Engineering, and Release Management."
+  email = "raut.roshan3110@gmail.com"
+  linkedin = "https://www.linkedin.com/in/roshan-raut-devops-engineer"
+  
+  # Tech Stack for Footer/Header
+  skills = ["Terraform", "Azure", "AWS", "Kubernetes", "Docker", "CI/CD"]
+
+[markup]
+  [markup.highlight]
+    style = "monokai"
+    lineNos = true
+    noClasses = false
