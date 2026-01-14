@@ -1,0 +1,51 @@
+# Site settings
+title: Roshan Raut
+description: Personal Portfolio
+url: "https://roshan-raut.github.io"
+baseurl: "/portfolio"
+
+# Profile information
+author:
+  name: Roshan Raut
+  username: roshan-raut
+  avatar: /assets/images/Photo.jpg
+  bio: Software Developer | Python | Java | Cloud Technologies
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Collections
+collections:
+  blogs:
+    output: true
+    permalink: /blogs/:title/
+  projects:
+    output: true
+    permalink: /projects/:title/
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor/
+  - .github/
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "blogs"
+    values:
+      layout: "blog"
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"

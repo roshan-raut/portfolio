@@ -1,0 +1,127 @@
+---
+layout: default
+title: CV
+permalink: /cv/
+---
+
+<div class="cv-page">
+    <section class="page-header">
+        <h1><i class="fas fa-file-alt"></i> Curriculum Vitae</h1>
+        <p>Professional experience and qualifications</p>
+        <div class="cv-actions">
+            <a href="{{ '/assets/pdf/Roshan-Raut-Resume.pdf' | relative_url }}" class="btn btn-primary" download>
+                <i class="fas fa-download"></i> Download Resume (PDF)
+            </a>
+            <a href="{{ '/assets/pdf/Profile.pdf' | relative_url }}" class="btn btn-secondary" download>
+                <i class="fas fa-download"></i> Download Profile
+            </a>
+        </div>
+    </section>
+
+    <!-- Professional Summary -->
+    <section class="cv-section">
+        <h2><i class="fas fa-user-tie"></i> Professional Summary</h2>
+        <div class="cv-content">
+            <p>{{ site.data.profile.bio }}</p>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="cv-section">
+        <h2><i class="fas fa-cogs"></i> Technical Skills</h2>
+        <div class="skills-cv">
+            {% for skill_group in site.data.profile.skills %}
+            <div class="skill-group-cv">
+                <h3>{{ skill_group.category }}</h3>
+                <div class="skill-tags">
+                    {% for skill in skill_group.items %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Experience (Add your experience data to profile.yml) -->
+    <section class="cv-section">
+        <h2><i class="fas fa-briefcase"></i> Professional Experience</h2>
+        <div class="cv-content">
+            <div class="experience-item">
+                <h3>Software Developer</h3>
+                <p class="company-period">
+                    <span class="company">Various Organizations</span>
+                    <span class="period">Present</span>
+                </p>
+                <ul class="responsibilities">
+                    <li>Developed and maintained REST APIs using Django and Spring Boot</li>
+                    <li>Implemented microservices architecture for scalable applications</li>
+                    <li>Worked with cloud platforms (AWS) for deployment and infrastructure</li>
+                    <li>Collaborated with cross-functional teams using Agile methodologies</li>
+                    <li>Contributed to open-source projects on GitHub</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Highlight -->
+    <section class="cv-section">
+        <h2><i class="fas fa-project-diagram"></i> Key Projects</h2>
+        <div class="cv-content">
+            {% for project in site.data.projects %}
+            {% if project.featured %}
+            <div class="project-item-cv">
+                <h3>{{ project.name }}</h3>
+                <p>{{ project.description }}</p>
+                <p class="project-tech"><strong>Technologies:</strong> {{ project.language }}, {{ project.topics | join: ", " }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Education (Add to your profile.yml if needed) -->
+    <section class="cv-section">
+        <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+        <div class="cv-content">
+            <div class="education-item">
+                <h3>Computer Science / Software Engineering</h3>
+                <p class="institution">University / Institution</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements -->
+    {% if site.data.profile.achievements %}
+    <section class="cv-section">
+        <h2><i class="fas fa-trophy"></i> Achievements & Recognition</h2>
+        <div class="cv-content">
+            {% for achievement in site.data.profile.achievements %}
+            <div class="achievement-item-cv">
+                <h3>{{ achievement.title }}</h3>
+                <p>{{ achievement.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Contact Information -->
+    <section class="cv-section">
+        <h2><i class="fas fa-address-card"></i> Contact Information</h2>
+        <div class="cv-content contact-info">
+            {% if site.data.profile.email %}
+            <p><i class="fas fa-envelope"></i> <a href="mailto:{{ site.data.profile.email }}">{{ site.data.profile.email }}</a></p>
+            {% endif %}
+            {% if site.data.profile.github %}
+            <p><i class="fab fa-github"></i> <a href="{{ site.data.profile.github }}" target="_blank">{{ site.data.profile.github }}</a></p>
+            {% endif %}
+            {% if site.data.profile.linkedin %}
+            <p><i class="fab fa-linkedin"></i> <a href="{{ site.data.profile.linkedin }}" target="_blank">{{ site.data.profile.linkedin }}</a></p>
+            {% endif %}
+            {% if site.data.profile.location %}
+            <p><i class="fas fa-map-marker-alt"></i> {{ site.data.profile.location }}</p>
+            {% endif %}
+        </div>
+    </section>
+</div>

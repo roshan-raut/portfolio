@@ -1,0 +1,52 @@
+# Profile Data
+name: "Roshan Raut"
+username: "roshan-raut"
+tagline: "Software Developer | Python | Java | Cloud Technologies"
+location: "India"
+email: "roshan.raut@example.com"
+github: "https://github.com/roshan-raut"
+linkedin: "https://linkedin.com/in/roshan-raut"
+
+bio: |
+  Experienced Software Developer with expertise in Python, Java, and cloud technologies. 
+  Passionate about building scalable applications and REST APIs using Django and Spring Boot.
+  Strong background in backend development, microservices architecture, and cloud infrastructure.
+
+skills:
+  - category: "Programming Languages"
+    items:
+      - Python
+      - Java
+      - JavaScript
+      - SQL
+  
+  - category: "Frameworks & Libraries"
+    items:
+      - Django
+      - Spring Boot
+      - REST API
+      - Flask
+  
+  - category: "Cloud & DevOps"
+    items:
+      - AWS
+      - Docker
+      - Kubernetes
+      - CI/CD
+  
+  - category: "Databases"
+    items:
+      - PostgreSQL
+      - MySQL
+      - MongoDB
+      - Redis
+
+achievements:
+  - title: "Arctic Code Vault Contributor"
+    description: "Contributed to repositories stored in the GitHub Arctic Code Vault"
+    icon: "🏆"
+
+stats:
+  repositories: 15
+  contributions_this_year: 3
+  years_on_github: 7

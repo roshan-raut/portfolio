@@ -1,0 +1,44 @@
+---
+layout: default
+title: Blogs
+permalink: /blogs/
+---
+
+<div class="blogs-page">
+    <section class="page-header">
+        <h1><i class="fas fa-blog"></i> Blog Posts</h1>
+        <p>Thoughts, tutorials, and insights on software development</p>
+    </section>
+
+    <div class="blogs-list">
+        {% for blog in site.data.blogs %}
+        <article class="blog-card">
+            {% if blog.featured %}
+            <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+            {% endif %}
+            <h2 class="blog-title">{{ blog.title }}</h2>
+            <p class="blog-excerpt">{{ blog.excerpt }}</p>
+            <div class="blog-meta">
+                <span class="blog-date">
+                    <i class="far fa-calendar"></i> {{ blog.date | date: "%B %d, %Y" }}
+                </span>
+                <span class="blog-author">
+                    <i class="far fa-user"></i> {{ blog.author }}
+                </span>
+            </div>
+            <div class="blog-tags">
+                {% for tag in blog.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if site.data.blogs.size == 0 %}
+    <div class="empty-state">
+        <i class="fas fa-pencil-alt"></i>
+        <p>No blog posts yet. Check back soon!</p>
+    </div>
+    {% endif %}
+</div>
