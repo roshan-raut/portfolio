@@ -1,4 +1,56 @@
 # Projects Data
+- name: "Enterprise CI/CD & Infrastructure Automation"
+  description: "Built central DevOps platforms and automated multi-team infrastructure using Terraform modules and custom GitHub Actions. Created standardized repository templates to accelerate CI/CD adoption across the organization."
+  language: "HCL / GitHub Actions"
+  url: "https://github.com/roshan-raut"
+  topics:
+    - terraform
+    - terragrunt
+    - devops
+    - automation
+  featured: true
+
+- name: "Cloud-Native Cluster Management (EKS/AKS)"
+  description: "Designed, deployed, and managed scalable Kubernetes clusters on AWS and Azure. Implemented complex upgrades, monitoring integrations with Grafana/Prometheus, and optimized resource performance."
+  language: "Kubernetes / Helm"
+  url: "https://github.com/roshan-raut"
+  topics:
+    - eks
+    - aks
+    - kubernetes
+    - monitoring
+  featured: true
+
+- name: "Azure Cloud Cost Analytics Platform"
+  description: "Developed an automated solution for cloud cost analysis by building Power BI reports integrated with Azure Cost Management API. Enabled data-driven decision making for organizational cloud spend."
+  language: "Power BI / API Integration"
+  url: "https://github.com/roshan-raut"
+  topics:
+    - azure
+    - cloud-cost-management
+    - analytics
+  featured: true
+
+- name: "Telco Digital Engine Microservices"
+  description: "Architected and developed Python-based microservices (DRF) for a 'Digital Engine' API. Deployed on AWS EKS to bridge high-traffic digital channels with legacy telecommunication systems."
+  language: "Python"
+  url: "https://github.com/roshan-raut"
+  topics:
+    - django-rest-framework
+    - microservices
+    - aws-eks
+  featured: true
+
+- name: "Serverless E2E Testing Framework"
+  description: "Built an automated end-to-end testing suite utilizing AWS Lambda functions to ensure reliability during rapid CI/CD release cycles."
+  language: "Python / AWS Lambda"
+  url: "https://github.com/roshan-raut"
+  topics:
+    - aws-lambda
+    - serverless
+    - automated-testing
+  featured: false
+  
 - name: "Wordcount"
   description: "Python-based word counting application with advanced text analysis features"
   language: "Python"

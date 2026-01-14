@@ -12,9 +12,6 @@ permalink: /cv/
             <a href="{{ '/assets/pdf/Roshan-Raut-Resume.pdf' | relative_url }}" class="btn btn-primary" download>
                 <i class="fas fa-download"></i> Download Resume (PDF)
             </a>
-            <a href="{{ '/assets/pdf/Profile.pdf' | relative_url }}" class="btn btn-secondary" download>
-                <i class="fas fa-download"></i> Download Profile
-            </a>
         </div>
     </section>
 
@@ -47,20 +44,14 @@ permalink: /cv/
     <section class="cv-section">
         <h2><i class="fas fa-briefcase"></i> Professional Experience</h2>
         <div class="cv-content">
-            <div class="experience-item">
-                <h3>Software Developer</h3>
-                <p class="company-period">
-                    <span class="company">Various Organizations</span>
-                    <span class="period">Present</span>
-                </p>
-                <ul class="responsibilities">
-                    <li>Developed and maintained REST APIs using Django and Spring Boot</li>
-                    <li>Implemented microservices architecture for scalable applications</li>
-                    <li>Worked with cloud platforms (AWS) for deployment and infrastructure</li>
-                    <li>Collaborated with cross-functional teams using Agile methodologies</li>
-                    <li>Contributed to open-source projects on GitHub</li>
-                </ul>
+            {% for experience in site.data.experience %}
+            <div class="ex-item-cv">
+                <h3>{{ experience.title }}</h3>
+                <p class="ex-org"><strong>Organization:</strong> {{ experience.organization }}</p>
+                <p class="ex-org"><strong>Duration:</strong> {{ experience.year }}</p>
+                <p class="ex-org"><strong>Location:</strong> {{ experience.location }}</p>
             </div>
+            {% endfor %}
         </div>
     </section>
 
@@ -85,21 +76,23 @@ permalink: /cv/
         <h2><i class="fas fa-graduation-cap"></i> Education</h2>
         <div class="cv-content">
             <div class="education-item">
-                <h3>Computer Science / Software Engineering</h3>
-                <p class="institution">University / Institution</p>
+                <h3>Elecrical Engineering</h3>
+                <p class="institution">University of Pune</p>
+                <p class="year">2010 - 2014</p>
             </div>
         </div>
     </section>
 
-    <!-- Achievements -->
-    {% if site.data.profile.achievements %}
+    <!-- certifications -->
+    {% if site.data.profile.certifications %}
     <section class="cv-section">
-        <h2><i class="fas fa-trophy"></i> Achievements & Recognition</h2>
+        <h2><i class="fas fa-trophy"></i> Licenses & certifications</h2>
         <div class="cv-content">
-            {% for achievement in site.data.profile.achievements %}
-            <div class="achievement-item-cv">
-                <h3>{{ achievement.title }}</h3>
-                <p>{{ achievement.description }}</p>
+            {% for certification in site.data.profile.certifications %}
+            <div class="certification-item-cv">
+                <h3>{{ certification.title }}</h3>
+                <p class="ex-org"><strong>Issued By:</strong>{{ certification.issuedby }}</p>
+                <p class="ex-org"><strong>Issued Date:</strong>{{ certification.issueddate }}</p>
             </div>
             {% endfor %}
         </div>
