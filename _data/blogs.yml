@@ -1,30 +1,8 @@
 # Blog Posts (Sample data - you can add more)
-- title: "Getting Started with Django REST Framework"
-  excerpt: "Learn how to build powerful REST APIs using Django REST Framework"
-  date: 2025-12-15
+- title: "Will Add soon"
+  excerpt: "Thinking on this"
+  date: 2026-01-14
   author: "Roshan Raut"
   tags:
-    - django
-    - python
-    - rest-api
-  featured: true
-
-- title: "Spring Boot Microservices Architecture"
-  excerpt: "Best practices for building microservices with Spring Boot"
-  date: 2025-11-20
-  author: "Roshan Raut"
-  tags:
-    - java
-    - spring-boot
-    - microservices
-  featured: true
-
-- title: "Cloud Deployment Strategies"
-  excerpt: "A guide to deploying applications on AWS and other cloud platforms"
-  date: 2025-10-05
-  author: "Roshan Raut"
-  tags:
-    - cloud
-    - aws
     - devops
-  featured: false
+  featured: true

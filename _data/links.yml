@@ -13,38 +13,48 @@
       url: "https://spring.io/guides"
       description: "Comprehensive Spring Boot tutorials"
 
+    - name: "Freecodecamp"
+      url: "https://www.freecodecamp.org/"
+      description: "Advance your career by learning in-demand skills in Programming, DevOps, Cybersecurity, AI Engineering, and English for Developers."
+
 - category: "Tools & Utilities"
   links:
-    - name: "GitHub"
-      url: "https://github.com"
-      description: "Version control and collaboration platform"
+    - name: "GitHub Actions"
+      url: "https://github.com/features/actions"
+      description: "GitHub Actions makes it easy to automate all your software workflows, now with world-class CI/CD. Build, test, and deploy your code right from GitHub. Make code reviews, branch management, and issue triaging work the way you want."
     
-    - name: "Stack Overflow"
-      url: "https://stackoverflow.com"
-      description: "Community for developers"
+    - name: "Argo CD - Declarative GitOps CD for Kubernetes"
+      url: "https://argo-cd.readthedocs.io/en/stable/"
+      description: "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes."
     
-    - name: "Visual Studio Code"
-      url: "https://code.visualstudio.com/"
-      description: "Powerful code editor"
+    - name: "Tekton"
+      url: "https://tekton.dev/"
+      description: "Tekton is a powerful and flexible open-source framework for creating CI/CD systems, allowing developers to build, test, and deploy across cloud providers and on-premise systems. Get started with Tekton"
 
 - category: "Cloud Platforms"
   links:
-    - name: "AWS"
-      url: "https://aws.amazon.com/"
-      description: "Amazon Web Services cloud platform"
+    - name: "Terraform on Azure cloud"
+      url: "https://github.com/stacksimplify/terraform-on-azure-cloud"
+      description: "Terraform on Azure with IaC DevOps and SRE | Real-World 25 Demos"
     
-    - name: "Google Cloud"
-      url: "https://cloud.google.com/"
-      description: "Google Cloud Platform"
+    - name: "Az Poershell"
+      url: "https://learn.microsoft.com/en-us/powershell/azure/"
+      description: "Azure PowerShell documentation"
     
-    - name: "Azure"
-      url: "https://azure.microsoft.com/"
-      description: "Microsoft Azure cloud services"
+    - name: "AWS skill builder"
+      url: "https://skillbuilder.aws/"
+      description: "Build in-demand cloud and AI skills for yourself and your team"
+
+- category: "AI"
+  links:
+    - name: "GitHub for Beginners: Building a REST API with Copilot"
+      url: "https://github.blog/ai-and-ml/github-copilot/github-for-beginners-building-a-rest-api-with-copilot/"
+      description: "GitHub for Beginners: Building a REST API with Copilot"
 
 - category: "Professional"
   links:
     - name: "LinkedIn Profile"
-      url: "http://linkedin.com/in/roshan-raut-devops-engineer/"
+      url: "https://www.linkedin.com/in/roshan-raut-devops-engineer"
       description: "Connect with me on LinkedIn"
     
     - name: "GitHub Profile"
