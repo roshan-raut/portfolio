@@ -1,0 +1,110 @@
+---
+layout: default
+title: Overview
+permalink: /
+---
+
+<div class="overview-page">
+    <!-- About Section -->
+    <section class="about-section">
+        <h2><i class="fas fa-user"></i> About Me</h2>
+        <div class="about-content">
+            {{ site.data.profile.bio }}
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section">
+        <h2><i class="fas fa-code"></i> Skills & Technologies</h2>
+        <div class="skills-grid">
+            {% for skill_group in site.data.profile.skills %}
+            <div class="skill-category">
+                <h3>{{ skill_group.category }}</h3>
+                <ul class="skill-list">
+                    {% for skill in skill_group.items %}
+                    <li class="skill-item">{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Popular Projects -->
+    <section class="popular-projects">
+        <h2><i class="fas fa-star"></i> Popular Projects</h2>
+        <div class="projects-grid">
+            {% for project in site.data.projects %}
+            {% if project.featured %}
+            <div class="project-card">
+                <h3 class="project-title">
+                    <a href="{{ project.url }}" target="_blank">{{ project.name }}</a>
+                </h3>
+                <p class="project-description">{{ project.description }}</p>
+                <div class="project-meta">
+                    <span class="project-language">
+                        <span class="language-dot" style="background-color: {% if project.language == 'Python' %}#3572A5{% elsif project.language == 'Java' %}#b07219{% else %}#888{% endif %};"></span>
+                        {{ project.language }}
+                    </span>
+                    {% if project.stars > 0 %}
+                    <span class="project-stars">
+                        <i class="fas fa-star"></i> {{ project.stars }}
+                    </span>
+                    {% endif %}
+                    {% if project.forks > 0 %}
+                    <span class="project-forks">
+                        <i class="fas fa-code-branch"></i> {{ project.forks }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="project-topics">
+                    {% for topic in project.topics %}
+                    <span class="topic-tag">{{ topic }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <a href="{{ '/projects' | relative_url }}" class="view-all-link">
+            View all projects <i class="fas fa-arrow-right"></i>
+        </a>
+    </section>
+
+    <!-- Achievements -->
+    {% if site.data.profile.achievements %}
+    <section class="achievements-section">
+        <h2><i class="fas fa-trophy"></i> Achievements</h2>
+        <div class="achievements-list">
+            {% for achievement in site.data.profile.achievements %}
+            <div class="achievement-item">
+                <span class="achievement-icon">{{ achievement.icon }}</span>
+                <div class="achievement-content">
+                    <h3>{{ achievement.title }}</h3>
+                    <p>{{ achievement.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Contribution Stats -->
+    <section class="stats-section">
+        <h2><i class="fas fa-chart-line"></i> GitHub Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ site.data.profile.stats.repositories }}</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ site.data.profile.stats.contributions_this_year }}</div>
+                <div class="stat-label">Contributions This Year</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ site.data.profile.stats.years_on_github }}</div>
+                <div class="stat-label">Years on GitHub</div>
+            </div>
+        </div>
+    </section>
+</div>

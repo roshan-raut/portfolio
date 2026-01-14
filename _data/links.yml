@@ -1,0 +1,52 @@
+# Useful Links
+- category: "Learning Resources"
+  links:
+    - name: "Python Documentation"
+      url: "https://docs.python.org/"
+      description: "Official Python documentation"
+    
+    - name: "Django Documentation"
+      url: "https://docs.djangoproject.com/"
+      description: "Django web framework documentation"
+    
+    - name: "Spring Boot Guides"
+      url: "https://spring.io/guides"
+      description: "Comprehensive Spring Boot tutorials"
+
+- category: "Tools & Utilities"
+  links:
+    - name: "GitHub"
+      url: "https://github.com"
+      description: "Version control and collaboration platform"
+    
+    - name: "Stack Overflow"
+      url: "https://stackoverflow.com"
+      description: "Community for developers"
+    
+    - name: "Visual Studio Code"
+      url: "https://code.visualstudio.com/"
+      description: "Powerful code editor"
+
+- category: "Cloud Platforms"
+  links:
+    - name: "AWS"
+      url: "https://aws.amazon.com/"
+      description: "Amazon Web Services cloud platform"
+    
+    - name: "Google Cloud"
+      url: "https://cloud.google.com/"
+      description: "Google Cloud Platform"
+    
+    - name: "Azure"
+      url: "https://azure.microsoft.com/"
+      description: "Microsoft Azure cloud services"
+
+- category: "Professional"
+  links:
+    - name: "LinkedIn Profile"
+      url: "http://linkedin.com/in/roshan-raut-devops-engineer/"
+      description: "Connect with me on LinkedIn"
+    
+    - name: "GitHub Profile"
+      url: "https://github.com/roshan-raut"
+      description: "Check out my code repositories"

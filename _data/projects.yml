@@ -1,0 +1,69 @@
+# Projects Data
+- name: "Wordcount"
+  description: "Python-based word counting application with advanced text analysis features"
+  language: "Python"
+  stars: 0
+  forks: 0
+  url: "https://github.com/roshan-raut/wordcount"
+  topics:
+    - python
+    - text-analysis
+  featured: true
+
+- name: "Profiles REST API"
+  description: "Source code for profiles rest API course - Django REST framework implementation"
+  language: "Python"
+  stars: 0
+  forks: 0
+  url: "https://github.com/roshan-raut/profiles-rest-api"
+  topics:
+    - django
+    - rest-api
+    - python
+  featured: true
+
+- name: "Recipe REST API"
+  description: "Recipe app API source code with full CRUD operations and authentication"
+  language: "Python"
+  stars: 0
+  forks: 0
+  url: "https://github.com/roshan-raut/recipe-rest-api"
+  topics:
+    - django
+    - rest-api
+    - recipe-app
+  featured: true
+
+- name: "MyProject"
+  description: "Java-based project demonstrating various design patterns and best practices"
+  language: "Java"
+  stars: 0
+  forks: 0
+  url: "https://github.com/roshan-raut/MyProject"
+  topics:
+    - java
+    - design-patterns
+  featured: false
+
+- name: "Spring Boot Fork"
+  description: "Forked from spring-projects/spring-boot - Personal experiments with Spring Boot framework"
+  language: "Java"
+  stars: 0
+  forks: 1
+  url: "https://github.com/roshan-raut/spring-boot"
+  topics:
+    - spring-boot
+    - java
+  featured: false
+
+- name: "Django Project"
+  description: "Full-stack Django web application with modern features"
+  language: "Python"
+  stars: 0
+  forks: 0
+  url: "https://github.com/roshan-raut/django_project"
+  topics:
+    - django
+    - python
+    - web-app
+  featured: false

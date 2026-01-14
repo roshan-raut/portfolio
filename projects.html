@@ -1,0 +1,52 @@
+---
+layout: default
+title: Projects
+permalink: /projects/
+---
+
+<div class="projects-page">
+    <section class="page-header">
+        <h1><i class="fas fa-folder"></i> Projects</h1>
+        <p>A collection of my work and contributions</p>
+    </section>
+
+    <div class="projects-list">
+        {% for project in site.data.projects %}
+        <article class="project-card">
+            <div class="project-header">
+                <h2 class="project-title">
+                    <a href="{{ project.url }}" target="_blank">
+                        {{ project.name }}
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </h2>
+                {% if project.featured %}
+                <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                {% endif %}
+            </div>
+            <p class="project-description">{{ project.description }}</p>
+            <div class="project-meta">
+                <span class="project-language">
+                    <span class="language-dot" style="background-color: {% if project.language == 'Python' %}#3572A5{% elsif project.language == 'Java' %}#b07219{% elsif project.language == 'JavaScript' %}#f1e05a{% else %}#888{% endif %};"></span>
+                    {{ project.language }}
+                </span>
+                {% if project.stars > 0 %}
+                <span class="project-stars">
+                    <i class="fas fa-star"></i> {{ project.stars }}
+                </span>
+                {% endif %}
+                {% if project.forks > 0 %}
+                <span class="project-forks">
+                    <i class="fas fa-code-branch"></i> {{ project.forks }}
+                </span>
+                {% endif %}
+            </div>
+            <div class="project-topics">
+                {% for topic in project.topics %}
+                <span class="topic-tag">{{ topic }}</span>
+                {% endfor %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</div>

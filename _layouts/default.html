@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - {{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- GitHub-style Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="header-left">
+                <a href="{{ '/' | relative_url }}" class="site-title">
+                    <i class="fab fa-github"></i> {{ site.author.username }}
+                </a>
+            </div>
+            <nav class="header-nav">
+                <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Overview
+                </a>
+                <a href="{{ '/blogs' | relative_url }}" class="nav-link {% if page.url contains 'blogs' %}active{% endif %}">
+                    <i class="fas fa-blog"></i> Blogs
+                </a>
+                <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url contains 'projects' %}active{% endif %}">
+                    <i class="fas fa-folder"></i> Projects
+                </a>
+                <a href="{{ '/links' | relative_url }}" class="nav-link {% if page.url contains 'links' %}active{% endif %}">
+                    <i class="fas fa-link"></i> Useful Links
+                </a>
+                <a href="{{ '/cv' | relative_url }}" class="nav-link {% if page.url contains 'cv' %}active{% endif %}">
+                    <i class="fas fa-file-alt"></i> CV
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Profile Section (shown on all pages) -->
+    <div class="profile-section">
+        <div class="container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img src="{{ site.author.avatar | relative_url }}" alt="{{ site.author.name }}">
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name">{{ site.author.name }}</h1>
+                    <p class="profile-username">{{ site.author.username }}</p>
+                    <p class="profile-bio">{{ site.author.bio }}</p>
+                    <div class="profile-links">
+                        {% if site.data.profile.github %}
+                        <a href="{{ site.data.profile.github }}" target="_blank" class="profile-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        {% endif %}
+                        {% if site.data.profile.linkedin %}
+                        <a href="{{ site.data.profile.linkedin }}" target="_blank" class="profile-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        {% endif %}
+                        {% if site.data.profile.email %}
+                        <a href="mailto:{{ site.data.profile.email }}" class="profile-link">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            {{ content }}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ 'now' | date: "%Y" }} {{ site.author.name }}. Built with Jekyll.</p>
+        </div>
+    </footer>
+</body>
+</html>
