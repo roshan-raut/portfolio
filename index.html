@@ -71,23 +71,19 @@ permalink: /
         </a>
     </section>
 
-    <!-- Achievements -->
-    {% if site.data.profile.achievements %}
-    <section class="achievements-section">
-        <h2><i class="fas fa-trophy"></i> Achievements</h2>
-        <div class="achievements-list">
-            {% for achievement in site.data.profile.achievements %}
-            <div class="achievement-item">
-                <span class="achievement-icon">{{ achievement.icon }}</span>
-                <div class="achievement-content">
-                    <h3>{{ achievement.title }}</h3>
-                    <p>{{ achievement.description }}</p>
-                </div>
+    <!-- certifications -->
+    <section class="cv-section">
+        <h2><i class="fas fa-trophy"></i> Licenses & certifications</h2>
+        <div class="cv-content">
+            {% for certification in site.data.profile.certifications %}
+            <div class="certification-item-cv">
+                <h3>{{ certification.title }}</h3>
+                <p class="ex-org"><strong>Issued By:</strong>{{ certification.issuedby }}</p>
+                <p class="ex-org"><strong>Issued Date:</strong>{{ certification.issueddate }}</p>
             </div>
             {% endfor %}
         </div>
     </section>
-    {% endif %}
 
     <!-- Contribution Stats -->
     <section class="stats-section">
