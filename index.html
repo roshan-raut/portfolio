@@ -72,14 +72,18 @@ permalink: /
     </section>
 
     <!-- certifications -->
-    <section class="cv-section">
-        <h2><i class="fas fa-trophy"></i> Licenses & certifications</h2>
-        <div class="cv-content">
-            {% for certification in site.data.certifications %}
-            <div class="certification-item-cv">
-                <h3>{{ certification.title }}</h3>
-                <p class="ex-org"><strong>Issued By:</strong>{{ certification.issuedby }}</p>
-                <p class="ex-org"><strong>Issued Date:</strong>{{ certification.issueddate }}</p>
+    <section class="skills-section">
+        <h2><i class="fas fa-certificate"></i> Licenses & Certifications</h2>
+        <div class="skills-grid">
+            {% for cert in site.data.certifications %}
+            <div class="skill-category">
+                <h3 style="color: #0969da; margin-bottom: 8px;">{{ cert.title }}</h3>
+                <p style="font-size: 13px; color: #24292f; margin: 2px 0;">
+                    <strong><i class="fas fa-building"></i></strong> {{ cert.issuedby }}
+                </p>
+                <p style="font-size: 12px; color: #57606a;">
+                    <strong><i class="far fa-calendar-alt"></i></strong> {{ cert.issueddate }}
+                </p>
             </div>
             {% endfor %}
         </div>
