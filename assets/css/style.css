@@ -480,15 +480,41 @@ details[open] .blog-title:after {
     }
 }
 
-/* Projects Page */
-.projects-list {
-    display: flex;
-    flex-direction: column;
+/* Projects Grid Layout */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Matches the blog width */
     gap: 16px;
+    margin-bottom: 32px;
 }
 
-.project-item-cv {
-    margin-bottom: 20px;
+.project-card {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 16px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Keeps tags at the bottom */
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.project-card:hover {
+    box-shadow: 0 3px 12px rgba(140, 149, 159, 0.15);
+    border-color: #0969da;
+}
+
+.project-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0969da;
+}
+
+/* Responsive: 1 column for small screens */
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Links Page */
