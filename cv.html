@@ -15,31 +15,6 @@ permalink: /cv/
         </div>
     </section>
 
-    <!-- Professional Summary -->
-    <section class="cv-section">
-        <h2><i class="fas fa-user-tie"></i> Professional Summary</h2>
-        <div class="cv-content">
-            <p>{{ site.data.profile.bio }}</p>
-        </div>
-    </section>
-
-    <!-- Skills -->
-    <section class="cv-section">
-        <h2><i class="fas fa-cogs"></i> Technical Skills</h2>
-        <div class="skills-cv">
-            {% for skill_group in site.data.profile.skills %}
-            <div class="skill-group-cv">
-                <h3>{{ skill_group.category }}</h3>
-                <div class="skill-tags">
-                    {% for skill in skill_group.items %}
-                    <span class="skill-tag">{{ skill }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-
     <!-- Experience (Add your experience data to profile.yml) -->
     <section class="cv-section">
         <h2><i class="fas fa-briefcase"></i> Professional Experience</h2>
@@ -55,27 +30,6 @@ permalink: /cv/
         </div>
     </section>
 
-    <!-- Projects Highlight -->
-    <section class="cv-section">
-        <h2><i class="fas fa-project-diagram"></i> Key Projects</h2>
-        <div class="projects-grid"> {% for project in site.data.projects %}
-            {% if project.featured %}
-            <div class="project-card">
-                <div class="project-header">
-                    <h3 class="project-title">{{ project.name }}</h3>
-                </div>
-                <p class="project-description">{{ project.description }}</p>
-                <p class="project-tech">
-                    <strong><i class="fas fa-code"></i></strong> {{ project.language }} 
-                    <br>
-                    <strong><i class="fas fa-tags"></i></strong> {{ project.topics | join: ", " }}
-                </p>
-            </div>
-            {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-
     <!-- Education (Add to your profile.yml if needed) -->
     <section class="cv-section">
         <h2><i class="fas fa-graduation-cap"></i> Education</h2>
@@ -85,19 +39,6 @@ permalink: /cv/
                 <p class="institution">University of Pune</p>
                 <p class="year">2010 - 2014</p>
             </div>
-        </div>
-    </section>
-
-    <!-- certifications -->
-    <section class="cv-section">
-        <h2><i class="fas fa-trophy"></i> Licenses & Certifications</h2>
-        <div class="skills-grid"> {% for certification in site.data.certifications %}
-            <div class="skill-category">
-                <h3 style="color: #0969da; margin-bottom: 8px; font-size: 16px;">{{ certification.title }}</h3>
-                <p style="margin: 2px 0;"><strong>Issued By:</strong> {{ certification.issuedby }}</p>
-                <p style="color: #57606a; font-size: 12px;"><strong>Date:</strong> {{ certification.issueddate }}</p>
-            </div>
-            {% endfor %}
         </div>
     </section>
 
