@@ -7,31 +7,45 @@ permalink: /blogs/
 <div class="blogs-page">
     <section class="page-header">
         <h1><i class="fas fa-blog"></i> Blog Posts</h1>
-        <p>Thoughts, tutorials, and insights on software development, DevOps</p>
+        <p>Thoughts, tutorials, and insights on software development and DevOps</p>
     </section>
 
     <div class="blogs-list">
-        {% for blog in site.data.blogs %}
-        <article class="blog-card">
-            {% if blog.featured %}
-            <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
-            {% endif %}
-            <h2 class="blog-title">{{ blog.title }}</h2>
-            <p class="blog-excerpt">{{ blog.excerpt }}</p>
-            <div class="blog-meta">
-                <span class="blog-date">
-                    <i class="far fa-calendar"></i> {{ blog.date | date: "%B %d, %Y" }}
-                </span>
-                <span class="blog-author">
-                    <i class="far fa-user"></i> {{ blog.author }}
-                </span>
-            </div>
-            <div class="blog-tags">
-                {% for tag in blog.tags %}
-                <span class="tag">{{ tag }}</span>
-                {% endfor %}
-            </div>
-        </article>
+        {% for blog_data in site.data.blogs %}
+            {% assign blog_post = site.blogs | where: "slug", blog_data.slug | first %}
+            
+            <article class="blog-card" id="{{ blog_data.slug }}">
+                {% if blog_data.featured %}
+                <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                {% endif %}
+                
+                <h2 class="blog-title">{{ blog_data.title }}</h2>
+                
+                <div class="blog-meta">
+                    <span class="blog-date">
+                        <i class="far fa-calendar"></i> {{ blog_data.date | date: "%B %d, %Y" }}
+                    </span>
+                    <span class="blog-author">
+                        <i class="far fa-user"></i> {{ blog_data.author }}
+                    </span>
+                </div>
+
+                <div class="blog-full-content" style="margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+                    {% if blog_post %}
+                        {{ blog_post.content }}
+                    {% else %}
+                        <p class="blog-excerpt"><em>Content file for {{ blog_data.slug }}.md not found in content/blogs/</em></p>
+                        <p>{{ blog_data.excerpt }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="blog-tags" style="margin-top: 15px;">
+                    {% for tag in blog_data.tags %}
+                    <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+            </article>
         {% endfor %}
     </div>
 
