@@ -8,18 +8,19 @@ github: "https://github.com/roshan-raut"
 linkedin: "https://www.linkedin.com/in/roshan-raut-devops-engineer"
 
 bio: |
-  Forward-thinking DevOps Engineer with strong expertise in CI/CD, Build Engineering, and Release Management across enterprise applications. Skilled in AWS and Azure cloud platforms and automating it with infra as code with Terraform/Terragrunt, containerization with Docker, and managing Kubernetes clusters for scalable deployments. Experienced in end-to-end code configuration, artifact build/release, and automated deployments in dynamic, fast-paced environments. Adept at optimizing pipelines, ensuring reliability, and driving cloud-native transformation.
+  Forward-thinking DevOps Engineer with strong expertise in CI/CD, Build Engineering, and Release Management across enterprise applications. Skilled in AWS and Azure cloud platforms and automating it with infra as code with Terraform/Terragrunt, containerization with Docker, and managing Kubernetes clusters for scalable deployments.
 
-  Over the years, I have:
-  ☑️ Migrated applications to the AWS/Azure cloud, ensuring scalability, performance, and cost efficiency.
-  ☑️ Designed & automated CI/CD pipelines using Github, Jenkins, AWS CDK, Helm, and Terraform.
-  ☑️ Managed Kubernetes clusters (EKS/AKS), enabling seamless deployments and operational resilience.
-  ☑️ Resolved critical incidents and optimized cloud performance, improving system reliability.
-  ☑️ Monitoring and obervability using Prometheus and Grafana
-  ☑️ Collaborated across teams to drive DevOps best practices, cloud security, and automation.
+  **Over the years, I have:**
+  * ☑️ Migrated applications to the AWS/Azure cloud, ensuring scalability, performance, and cost efficiency.
+  * ☑️ Designed & automated CI/CD pipelines using Github, Jenkins, AWS CDK, Helm, and Terraform.
+  * ☑️ Managed Kubernetes clusters (EKS/AKS), enabling seamless deployments and operational resilience.
+  * ☑️ Resolved critical incidents and optimized cloud performance, improving system reliability.
+  * ☑️ Monitoring and observability using Prometheus and Grafana.
+  * ☑️ Collaborated across teams to drive DevOps best practices, cloud security, and automation.
 
   Passionate about cloud automation, DevOps best practices, and problem-solving.
-  Let's connect and talk Cloud & DevOps!
+  
+  **Let's connect and talk Cloud & DevOps!**
 
 skills:
   - category: "Programming Languages"

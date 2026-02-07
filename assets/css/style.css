@@ -177,31 +177,36 @@ a:hover {
 }
 
 /* Overview Page */
-.about-section,
-.skills-section,
-.popular-projects,
-.achievements-section,
-.stats-section {
-    margin-bottom: 48px;
+.overview-page section {
+    margin-bottom: 48px; /* Adds space after every section */
 }
 
-.about-section h2,
-.skills-section h2,
-.popular-projects h2,
-.achievements-section h2,
-.stats-section h2 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* Ensure the titles have a little space below them */
+.overview-page section h2 {
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d0d7de; /* Matches GitHub's subtle line */
 }
 
+/* Fix for the About section specifically */
 .about-content {
-    font-size: 16px;
+    margin-bottom: 16px;
+}
+.about-content ul {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-left: 20px;
+    list-style-type: none; /* Removes the default dots so emojis shine */
+}
+
+.about-content li {
+    margin-bottom: 8px;
     line-height: 1.6;
-    color: #24292f;
+    position: relative;
+}
+
+.about-content p {
+    margin-bottom: 16px;
 }
 
 /* Skills Grid */
@@ -758,14 +763,17 @@ details[open] .blog-title:after {
     }
 
     .profile-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        display: flex;
+        gap: 32px;
+        align-items: center; /* Centers the text vertically with the smaller image */
     }
 
     .profile-avatar img {
-        width: 200px;
-        height: 200px;
+        width: 150px;  /* Changed from 296px */
+        height: 150px; /* Changed from 296px */
+        border-radius: 50%;
+        border: 1px solid #d0d7de;
+        object-fit: cover; /* Ensures the image doesn't stretch */
     }
 
     .profile-links {
