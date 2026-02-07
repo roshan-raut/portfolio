@@ -27,4 +27,15 @@
   tags:
     - devops
     - ansible
-  featured: false
+  featured: true
+
+- title: "Linux Directory Structure Explained for DevOps Engineers"
+  excerpt: "A practical explanation of the Linux filesystem hierarchy and what DevOps engineers should know about each directory."
+  date: 2026-01-17
+  author: "Roshan Raut"
+  slug: "linux-directory-structure"
+  tags:
+    - devops
+    - linux
+    - fundamentals
+  featured: true
