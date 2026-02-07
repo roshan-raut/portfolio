@@ -58,13 +58,18 @@ permalink: /cv/
     <!-- Projects Highlight -->
     <section class="cv-section">
         <h2><i class="fas fa-project-diagram"></i> Key Projects</h2>
-        <div class="cv-content">
-            {% for project in site.data.projects %}
+        <div class="projects-grid"> {% for project in site.data.projects %}
             {% if project.featured %}
-            <div class="project-item-cv">
-                <h3>{{ project.name }}</h3>
-                <p>{{ project.description }}</p>
-                <p class="project-tech"><strong>Technologies:</strong> {{ project.language }}, {{ project.topics | join: ", " }}</p>
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">{{ project.name }}</h3>
+                </div>
+                <p class="project-description">{{ project.description }}</p>
+                <p class="project-tech">
+                    <strong><i class="fas fa-code"></i></strong> {{ project.language }} 
+                    <br>
+                    <strong><i class="fas fa-tags"></i></strong> {{ project.topics | join: ", " }}
+                </p>
             </div>
             {% endif %}
             {% endfor %}
@@ -85,13 +90,12 @@ permalink: /cv/
 
     <!-- certifications -->
     <section class="cv-section">
-        <h2><i class="fas fa-trophy"></i> Licenses & certifications</h2>
-        <div class="cv-content">
-            {% for certification in site.data.certifications %}
-            <div class="certification-item-cv">
-                <h3>{{ certification.title }}</h3>
-                <p class="ex-org"><strong>Issued By:</strong>{{ certification.issuedby }}</p>
-                <p class="ex-org"><strong>Issued Date:</strong>{{ certification.issueddate }}</p>
+        <h2><i class="fas fa-trophy"></i> Licenses & Certifications</h2>
+        <div class="skills-grid"> {% for certification in site.data.certifications %}
+            <div class="skill-category">
+                <h3 style="color: #0969da; margin-bottom: 8px; font-size: 16px;">{{ certification.title }}</h3>
+                <p style="margin: 2px 0;"><strong>Issued By:</strong> {{ certification.issuedby }}</p>
+                <p style="color: #57606a; font-size: 12px;"><strong>Date:</strong> {{ certification.issueddate }}</p>
             </div>
             {% endfor %}
         </div>
