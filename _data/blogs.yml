@@ -1,8 +1,30 @@
-# Blog Posts (Sample data - you can add more)
-- title: "Will Add soon"
-  excerpt: "Thinking on this"
+# Blog Posts
+- title: "Docker Cheatsheet for DevOps Engineers"
+  excerpt: "Practical Docker commands for daily DevOps work."
   date: 2026-01-14
   author: "Roshan Raut"
+  slug: "docker-cheatsheet"
   tags:
     - devops
+    - docker
   featured: true
+
+- title: "Kubernetes Cheatsheet for DevOps Engineers"
+  excerpt: "Essential kubectl commands for production operations."
+  date: 2026-01-15
+  author: "Roshan Raut"
+  slug: "kubernetes-cheatsheet"
+  tags:
+    - devops
+    - kubernetes
+  featured: true
+
+- title: "Ansible Cheatsheet for DevOps Engineers"
+  excerpt: "Common Ansible commands and automation patterns."
+  date: 2026-01-16
+  author: "Roshan Raut"
+  slug: "ansible-cheatsheet"
+  tags:
+    - devops
+    - ansible
+  featured: false
