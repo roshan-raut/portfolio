@@ -7,50 +7,48 @@ permalink: /blogs/
 <div class="blogs-page">
     <section class="page-header">
         <h1><i class="fas fa-blog"></i> Blog Posts</h1>
-        <p>Thoughts, tutorials, and insights on software development and DevOps</p>
+        <p>Technical guides, cheatsheets, and DevOps insights</p>
     </section>
 
     <div class="blogs-list">
         {% for blog_data in site.data.blogs %}
             {% assign blog_post = site.blogs | where: "slug", blog_data.slug | first %}
             
-            <article class="blog-card" id="{{ blog_data.slug }}" style="margin-bottom: 2rem;">
+            <article class="blog-card" id="{{ blog_data.slug }}">
                 <details>
-                    <summary style="cursor: pointer; list-style: none; outline: none;">
-                        <div class="blog-header-wrapper" style="display: inline-block; width: 95%;">
+                    <summary>
+                        <div class="blog-header-content">
                             {% if blog_data.featured %}
-                            <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                                <span class="featured-badge" style="margin-bottom: 8px;">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
                             {% endif %}
                             
-                            <h2 class="blog-title" style="display: inline-block; margin: 0 10px 0 0;">
-                                {{ blog_data.title }} 
-                                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--primary);"></i>
-                            </h2>
+                            <h2 class="blog-title">{{ blog_data.title }}</h2>
                             
-                            <div class="blog-meta" style="margin-top: 5px;">
-                                <span class="blog-date">
-                                    <i class="far fa-calendar"></i> {{ blog_data.date | date: "%B %d, %Y" }}
-                                </span>
-                                <p class="blog-excerpt" style="margin: 5px 0; color: #64748b;">{{ blog_data.excerpt }}</p>
+                            <div class="blog-meta">
+                                <span><i class="far fa-calendar"></i> {{ blog_data.date | date: "%B %d, %Y" }}</span>
+                                <span><i class="far fa-user"></i> {{ blog_data.author }}</span>
                             </div>
+                            
+                            <p class="blog-excerpt">{{ blog_data.excerpt }}</p>
                         </div>
                     </summary>
 
-                    <div class="blog-full-content" style="margin-top: 20px; padding: 25px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <div class="blog-full-content">
                         {% if blog_post %}
                             {{ blog_post.content }}
                         {% else %}
-                            <p class="blog-error"><em>Content for {{ blog_data.slug }}.md not found. Ensure it is in the _blogs folder.</em></p>
+                            <p><em>Content not found. Please ensure the file is in the _blogs folder.</em></p>
                         {% endif %}
                         
-                        <div class="blog-tags" style="margin-top: 20px;">
+                        <div class="blog-tags" style="margin-top: 16px;">
                             {% for tag in blog_data.tags %}
-                            <span class="tag" style="background: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; margin-right: 5px;">#{{ tag }}</span>
+                                <span class="tag">#{{ tag }}</span>
                             {% endfor %}
                         </div>
                     </div>
                 </details>
-                <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
             </article>
         {% endfor %}
     </div>
