@@ -39,3 +39,123 @@
     - linux
     - fundamentals
   featured: true
+
+- title: "Infra for AI – Part 1: Hardware 101 – Why Can't My CPU Do This?"
+  excerpt: "Understanding parallelism, TFLOPS, and memory bandwidth — and why GPUs with HBM dominate modern AI workloads."
+  date: 2026-02-01
+  author: "Roshan Raut"
+  slug: "infra-for-ai-01-hardware"
+  tags:
+    - ai
+    - gpu
+    - infrastructure
+    - fundamentals
+  featured: true
+
+- title: "Infra for AI – Part 2: CUDA, ROCm & The Software-Hardware Bridge"
+  excerpt: "How AI code communicates with GPUs using CUDA and ROCm, and why driver compatibility defines production stability."
+  date: 2026-02-03
+  author: "Roshan Raut"
+  slug: "infra-for-ai-02-cuda-rocm"
+  tags:
+    - ai
+    - cuda
+    - gpu
+    - linux
+  featured: false
+
+- title: "Infra for AI – Part 3: Containerizing AI Workloads"
+  excerpt: "Best practices for building reproducible AI containers, managing 10GB+ images, and securely exposing GPUs."
+  date: 2026-02-05
+  author: "Roshan Raut"
+  slug: "infra-for-ai-03-containerizing-ai"
+  tags:
+    - ai
+    - docker
+    - mlops
+    - containers
+  featured: false
+
+- title: "Infra for AI – Part 4: Kubernetes for AI – The GPU-Enabled Cluster"
+  excerpt: "Configuring NVIDIA Device Plugins, scheduling GPU workloads, and automating AI clusters with Terraform."
+  date: 2026-02-07
+  author: "Roshan Raut"
+  slug: "infra-for-ai-04-kubernetes-gpu"
+  tags:
+    - ai
+    - kubernetes
+    - gpu
+    - terraform
+  featured: true
+
+- title: "Infra for AI – Part 5: Distributed Training at Scale"
+  excerpt: "Data parallelism vs model parallelism, NCCL communication, and orchestrating multi-GPU training workloads."
+  date: 2026-02-09
+  author: "Roshan Raut"
+  slug: "infra-for-ai-05-distributed-training"
+  tags:
+    - ai
+    - distributed-systems
+    - gpu
+    - mlops
+  featured: false
+
+- title: "Infra for AI – Part 6: Storage Architecture for AI Workloads"
+  excerpt: "Why S3 alone isn’t enough for training and how FSx, JuiceFS, and caching reduce GPU IO wait time."
+  date: 2026-02-11
+  author: "Roshan Raut"
+  slug: "infra-for-ai-06-storagefor-ai"
+  tags:
+    - ai
+    - storage
+    - cloud
+    - performance
+  featured: false
+
+- title: "Infra for AI – Part 7: Model Serving & Inference Infrastructure"
+  excerpt: "Deploying large language models using TGI, vLLM, and Triton with autoscaling based on token latency."
+  date: 2026-02-13
+  author: "Roshan Raut"
+  slug: "infra-for-ai-07-model-serving"
+  tags:
+    - ai
+    - inference
+    - kubernetes
+    - scaling
+  featured: true
+
+- title: "Infra for AI – Part 8: MLOps Pipelines – CI/CD for Models"
+  excerpt: "Automating training, versioning models, and deploying via GitHub Actions with cost-efficient spot instances."
+  date: 2026-02-15
+  author: "Roshan Raut"
+  slug: "infra-for-ai-08-mlops-pipelines"
+  tags:
+    - ai
+    - mlops
+    - cicd
+    - automation
+  featured: false
+
+- title: "Infra for AI – Part 9: Networking – The East-West Traffic of AI"
+  excerpt: "Understanding RDMA, InfiniBand, and RoCE to reduce latency between distributed GPU nodes."
+  date: 2026-02-17
+  author: "Roshan Raut"
+  slug: "infra-for-ai-09-networking"
+  tags:
+    - ai
+    - networking
+    - rdma
+    - performance
+  featured: false
+
+- title: "Infra for AI – Part 10: FinOps for AI Infrastructure"
+  excerpt: "Optimizing GPU costs using spot instances, fractional GPUs (MIG), and serverless AI patterns."
+  date: 2026-02-19
+  author: "Roshan Raut"
+  slug: "infra-for-ai-10-finops-ai"
+  tags:
+    - ai
+    - finops
+    - cloud
+    - cost-optimization
+  featured: true
