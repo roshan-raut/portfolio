@@ -1,72 +1,86 @@
 ---
-layout: default
-title: "Infra for AI – Part 3: Containerizing AI"
-date: 2026-02-15
-author: "Roshan Raut"
-slug: "infra-for-ai-03-containerizing-ai"
-tags:
-  - ai
-  - docker
-  - mlops
-  - containers
-summary: "Solving reproducibility and image bloat: A guide to multi-stage builds and GPU passthrough for ML workloads."
+title: "Infra for AI – Part 3: Containerizing AI Workloads"
+short: "Containerizing AI"
+date: 2026-02-05
+updated: 2026-11-17
+series: "Infra for AI"
+part: 3
+summary: "Reproducible GPU images, why model weights shouldn't live in your image, lazy-loading for 10 GB+ images, CDI, and a secure AI supply chain."
+tags: [ai, docker, containers, security, mlops]
 ---
 
 ## Context
-In traditional microservices, a 500MB Docker image is considered "large." In AI, a base image containing PyTorch and CUDA libraries often starts at 6GB. This creates massive challenges for CI/CD pipelines, disk space, and cold-start times in production.
 
-## 1. The Reproducibility Challenge
-"It works on my machine" is 10x worse in AI. 
-  - **The Problem:** Slight differences in library versions (e.g., `libcusolver.so.11`) can cause a model to either crash or, worse, produce slightly different mathematical results.
-  - **The Solution:** We must containerize not just the code, but the entire CUDA environment.
+AI containers break the usual assumptions: images are 5–20 GB, cold starts take minutes, and the "artifact" you care about (model weights) can be hundreds of gigabytes. The fix is to separate **runtime**, **code** and **weights**.
 
-## 2. Managing Large ML Base Images
-Most AI teams start with `nvidia/cuda` or `pytorch/pytorch`. 
-  - **Tip:** Use the `-runtime` or `-base` tags for production, and only use the `-devel` tags for your build/training stages.
-  - **Registry Choice:** Use high-throughput registries like Amazon ECR or Google Artifact Registry to handle the 10GB+ pulls efficiently.
+## 1. Pick the right base
 
+| Base | When |
+|---|---|
+| `vllm/vllm-openai`, `lmsysorg/sglang` | Serving open-weight LLMs — don't rebuild these |
+| `nvcr.io/nvidia/pytorch:<yy.mm>-py3` | Training/fine-tuning with a tested CUDA+NCCL+PyTorch combo |
+| `nvidia/cuda:13.x-runtime-ubuntu24.04` + `uv pip install torch` | Slim custom images |
+| `rocm/pytorch`, `rocm/vllm` | AMD Instinct |
 
+Use the `runtime` flavour, not `devel`, unless you compile kernels at build time.
 
-## 3. Optimization: Multi-Stage Builds
-To prevent your production image from being 15GB, use multi-stage builds. Compile your dependencies in a "heavy" image, then copy only the binaries to a "light" runtime image.
+## 2. A modern, reproducible Dockerfile
 
 ```dockerfile
-# Stage 1: Build
-FROM nvidia/cuda:12.1.0-devel-ubuntu22.04 AS builder
-RUN apt-get update && apt-get install -y python3-pip
-COPY requirements.txt .
-RUN pip install --user -r requirements.txt
+# syntax=docker/dockerfile:1.7
+FROM nvidia/cuda:13.0.1-runtime-ubuntu24.04 AS base
 
-# Stage 2: Runtime
-FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
-RUN apt-get update && apt-get install -y python3
-COPY --from=builder /root/.local /root/.local
-COPY . /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy UV_COMPILE_BYTECODE=1
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
-ENV PATH=/root/.local/bin:$PATH
-CMD ["python3", "main.py"]
+
+# Dependency layer: cached unless the lockfile changes
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-dev
+
+COPY src/ ./src
+USER 1000
+ENTRYPOINT ["uv", "run", "python", "-m", "src.serve"]
 ```
 
-## 4. GPU Passthrough: The --gpus Flag
-Even with the NVIDIA Container Toolkit installed, Docker containers are isolated from the hardware by default. You must explicitly pass the GPU device.
+Key points: a **lockfile** (`uv.lock`) for exact reproducibility, a BuildKit cache mount, a non-root user, and **no model weights in the image**.
 
-  - **Pass all GPUs:** `docker run --gpus all my-ai-app`
-  - **Pass specific GPU:** `docker run --gpus '"device=0"' my-ai-app`
-  - **Pass by capability:** `docker run --gpus all,capabilities=utility,compute my-ai-app`
+## 3. Keep weights out of the image
 
-## 5. Production Hardening Practices
-Moving AI containers to production requires extra security and stability steps:
+Baking a 140 GB model into an image means every node pulls 140 GB through the registry on every deploy. Instead:
 
-  1. **Resource Limits:** Always set memory limits. A GPU OOM (Out of Memory) error can sometimes hang the entire host kernel, not just the container.
-  2. **Non-Root Users:** Even if NVIDIA's base images default to root, use USER 1000 to prevent privilege escalation.
-  3. **Health Checks:** Use a script that checks GPU health:
+- **Object storage + fast loader** — pull `safetensors` from S3/Blob/GCS at start using parallel loaders (e.g. the Run:ai Model Streamer supported by vLLM).
+- **Shared filesystem cache** — FSx for Lustre / Azure Managed Lustre / a node-local NVMe cache (Part 6).
+- **Weights as OCI artifacts** — push models to your registry and mount them with Kubernetes **image volumes**, so the same signing and caching pipeline covers code *and* weights.
 
-  ```bash
-  HEALTHCHECK --interval=30s --timeout=10s \
-    CMD nvidia-smi || exit 1
-  ```
+Prefer **safetensors** over pickle-based `.bin`/`.pt` files: pickle can execute arbitrary code on load.
 
-4. **Shm-size:** Deep learning often requires shared memory for data loaders. Use --shm-size=1g or larger, otherwise, your training will crash with a "Bus error."
+## 4. Taming big images
 
-## Lessons Learned
-Containerizing AI isn't just about wrapping code; it's about managing the heavy marriage between OS drivers and math libraries. By using multi-stage builds and strict resource limits, you can turn a fragile ML experiment into a stable production service.
+- **Lazy pulling:** SOCI (AWS), eStargz/Nydus or GKE image streaming start containers before the full image arrives.
+- **Pre-pull** on GPU nodes with a DaemonSet or bake into the node image.
+- **Registry close to compute** — pull-through caches in the same region.
+
+## 5. Exposing GPUs to containers
+
+The **NVIDIA Container Toolkit** now uses **CDI (Container Device Interface)** — a standard spec that tells the runtime which device nodes and libraries to inject.
+
+```bash
+# Docker / Podman with CDI
+docker run --rm --device nvidia.com/gpu=all nvidia/cuda:13.0.1-base-ubuntu24.04 nvidia-smi
+```
+
+CDI is also what Kubernetes **DRA** builds on (Part 4). Never use `--privileged` to "make the GPU work".
+
+## 6. AI supply-chain security
+
+- **Sign** images and model artifacts (Sigstore `cosign`), verify at admission (Kyverno / policy controller).
+- Generate **SBOMs** (`syft`) and scan (`grype`, Trivy) — CUDA images carry a lot of OS packages.
+- Pin by **digest**, not tag.
+- Treat model files as untrusted input: safetensors, checksums, provenance from a trusted registry.
+
+## Lessons learned
+
+The container should hold the **runtime and code**; the **weights** are a separate, versioned, signed artifact loaded at start. That split is what turns 10-minute cold starts into seconds and keeps your registry bill sane.

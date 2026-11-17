@@ -1,11 +1,11 @@
-# Personal Portfolio - GitHub Style
+# Personal Portfolio
 
-A Jekyll-based personal portfolio website styled like a GitHub profile page.
+A Jekyll-based portfolio and AI-infrastructure blog: dark/light themes, ⌘K command palette, RSS, SEO tags.
 
 ## Features
 
 - **Overview Page**: Profile summary, skills, popular projects, achievements, and GitHub statistics
-- **Blogs Page**: List of blog posts with tags and featured posts
+- **Writing Page**: Searchable, tag-filterable posts; each post has its own page with TOC, reading time, series nav and copy-code buttons
 - **Projects Page**: Complete list of projects with technologies and links
 - **Useful Links Page**: Curated resources organized by category
 - **CV Page**: Professional resume with downloadable PDF versions
@@ -18,7 +18,6 @@ portfolio/
 ├── _data/                   # YAML data files
 │   ├── profile.yml          # Your profile information
 │   ├── projects.yml         # Projects data
-│   ├── blogs.yml            # Blog posts data
 │   └── links.yml            # Useful links data
 ├── _layouts/
 │   └── default.html         # Main layout template
@@ -103,16 +102,20 @@ Edit `_data/projects.yml` to add or modify projects:
 
 ### Add Blog Posts
 
-Edit `_data/blogs.yml` to add blog posts:
+Drop a Markdown file into `_blogs/` — that's it. The writing page, search (⌘K), RSS feed and series navigation pick it up automatically.
+
 ```yaml
-- title: "Blog Post Title"
-  excerpt: "Short description"
-  date: 2026-01-14
-  author: "Your Name"
-  tags:
-    - tag1
-    - tag2
-  featured: true
+---
+title: "My new post"
+date: 2026-12-01
+summary: "One-line summary shown on cards and in search."
+tags: [ai, llm]
+# optional
+series: "Infra for AI"   # groups posts with prev/next navigation
+part: 11
+short: "Sidebar title"
+updated: 2026-12-05
+---
 ```
 
 ### Update Useful Links
@@ -168,13 +171,9 @@ The GitHub Actions workflow (`.github/workflows/jekyll.yml`) will:
 
 ## Features to Add
 
-- [ ] Blog post pages (individual blog post content)
-- [ ] Search functionality
-- [ ] Dark mode toggle
 - [ ] Activity/contribution graph
 - [ ] Contact form
 - [ ] Comments system
-- [ ] RSS feed
 
 ## License
 

@@ -1,0 +1,68 @@
+---
+layout: default
+---
+{% assign words = content | number_of_words %}
+{% assign minutes = words | divided_by: 200 | at_least: 1 %}
+{% if page.series %}
+  {% assign series_posts = site.blogs | where: "series", page.series | sort: "part" %}
+{% endif %}
+
+<article class="container post">
+    <a class="back-link mono" href="{{ '/blogs/' | relative_url }}"><i class="fas fa-arrow-left"></i> cd ../writing</a>
+
+    <header class="post-header">
+        {% if page.series %}
+        <div class="eyebrow mono">{{ page.series }} · part {{ page.part }}/{{ series_posts.size }}</div>
+        {% endif %}
+        <h1 class="post-title">{{ page.title }}</h1>
+        {% if page.summary %}<p class="post-summary">{{ page.summary }}</p>{% endif %}
+        <div class="post-meta mono">
+            <span><i class="far fa-calendar"></i> {{ page.date | date: "%b %d, %Y" }}</span>
+            {% if page.updated %}<span><i class="fas fa-rotate"></i> updated {{ page.updated | date: "%b %d, %Y" }}</span>{% endif %}
+            <span><i class="far fa-clock"></i> {{ minutes }} min read</span>
+        </div>
+        <div class="tag-row">
+            {% for tag in page.tags %}<a class="tag" href="{{ '/blogs/' | relative_url }}?tag={{ tag }}">#{{ tag }}</a>{% endfor %}
+        </div>
+    </header>
+
+    <div class="post-grid">
+        <div class="prose" id="prose">
+            {{ content }}
+        </div>
+        <aside class="post-aside">
+            <div class="toc-box">
+                <div class="aside-title mono">on this page</div>
+                <nav id="toc"></nav>
+            </div>
+            {% if page.series %}
+            <div class="toc-box series-box">
+                <div class="aside-title mono">{{ page.series }}</div>
+                <ol class="series-list">
+                    {% for p in series_posts %}
+                    <li class="{% if p.url == page.url %}current{% endif %}"><a href="{{ p.url | relative_url }}">{{ p.short | default: p.title }}</a></li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+
+    {% if page.series %}
+    <nav class="post-pager">
+        {% for p in series_posts %}
+            {% if p.url == page.url %}
+                {% assign i = forloop.index0 %}
+                {% assign prev_i = i | minus: 1 %}
+                {% assign next_i = i | plus: 1 %}
+                {% if i > 0 %}{% assign prev = series_posts[prev_i] %}
+                <a class="pager-card" href="{{ prev.url | relative_url }}"><span class="mono muted">← previous</span><span>{{ prev.title }}</span></a>
+                {% else %}<span></span>{% endif %}
+                {% if next_i < series_posts.size %}{% assign next = series_posts[next_i] %}
+                <a class="pager-card right" href="{{ next.url | relative_url }}"><span class="mono muted">next →</span><span>{{ next.title }}</span></a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+</article>

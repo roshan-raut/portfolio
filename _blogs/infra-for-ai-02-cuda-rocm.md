@@ -1,73 +1,79 @@
 ---
-layout: default
-title: "Infra for AI – Part 2: CUDA & ROCm"
-date: 2026-02-08
-author: "Roshan Raut"
-slug: "infra-for-ai-02-cuda-rocm"
-tags:
-  - ai
-  - cuda
-  - gpu
-  - linux
-summary: "The software-hardware bridge: Navigating the complex world of GPU drivers, CUDA kernels, and the NVIDIA Container Toolkit."
+title: "Infra for AI – Part 2: CUDA, ROCm & the Software–Hardware Bridge"
+short: "CUDA, ROCm & drivers"
+date: 2026-02-03
+updated: 2026-11-17
+series: "Infra for AI"
+part: 2
+summary: "The driver → runtime → library → framework stack, why version alignment breaks production, and what changed with CUDA 13 and ROCm 7."
+tags: [ai, cuda, rocm, gpu, linux]
 ---
 
 ## Context
-Hardware is just expensive silicon without the software layer that tells it how to execute math. For a DevOps Engineer, the "AI Stack" starts at the Linux Kernel and moves up through drivers to the Container Runtime. Managing this "Dependency Hell" is a core DevOps responsibility.
 
-## 1. The CUDA Dominance (NVIDIA)
-**CUDA (Compute Unified Device Architecture)** is more than a driver; it is a parallel computing platform and programming model. 
+A GPU is useless without the software stack that lets PyTorch talk to it. Most "the GPU isn't working" incidents I've seen are **version mismatches** somewhere in this stack — not hardware faults.
 
-  - **Why it wins:** NVIDIA invested 15+ years in the software ecosystem (cuDNN for deep learning, NCCL for multi-GPU communication).
-  - **The Catch:** It is proprietary. It only runs on NVIDIA hardware, creating a "walled garden" that defines modern AI infra.
+## 1. The stack, bottom to top
 
-## 2. The Challenger: AMD ROCm
-**ROCm (Radeon Open Compute)** is the open-source answer to CUDA. 
-
-  - **Architecture:** It aims for portability. Tools like `HIPIFY` allow developers to convert CUDA code to Portable C++ that runs on AMD GPUs (like the MI300X).
-  - **DevOps Note:** AMD infrastructure is gaining traction because it avoids vendor lock-in and often offers better price-to-performance for raw compute.
-
-## 3. Triton: The New Intermediate Language
-Developed by OpenAI, **Triton** is a language and compiler that allows developers to write highly efficient GPU code without being experts in CUDA C++.
-
-  - **Importance:** It simplifies how kernels (the math functions sent to the GPU) are written.
-  - **Impact:** It makes it easier for new hardware (like Intel Gaudi) to support modern AI models like Llama-3.
-
-## 4. The Linux Driver Setup
-Setting up an AI node requires managing three distinct layers. If these versions don't align, the GPU will not be accessible to your applications.
-
-  1. **Kernel Module:** The low-level `nvidia.ko` driver.
-  2. **CUDA Toolkit:** The compilers and libraries (`nvcc`, `cublas`).
-  3. **NVIDIA Container Toolkit:** The bridge that lets Docker "see" the GPU.
-
-### Practical: NVIDIA Container Toolkit Setup
-To run AI containers, your Docker daemon must be configured with the NVIDIA runtime:
-
-```bash
-# 1. Install the toolkit
-sudo apt-get install -y nvidia-container-toolkit
-
-# 2. Configure Docker to use the NVIDIA runtime
-sudo nvidia-ctk runtime configure --runtime=docker
-
-# 3. Restart Docker
-sudo systemctl restart docker
-
-# 4. Test the bridge
-docker run --rm --gpus all nvidia/cuda:12.0-base-ubuntu22.04 nvidia-smi
+```text
+┌──────────────────────────────────────────────┐
+│ Your code: PyTorch / JAX / vLLM / SGLang     │
+├──────────────────────────────────────────────┤
+│ Libraries: cuDNN, cuBLAS, NCCL, TensorRT     │  (ROCm: MIOpen, hipBLASLt, RCCL)
+├──────────────────────────────────────────────┤
+│ Runtime: CUDA Toolkit (user space)           │  (ROCm: HIP runtime)
+├──────────────────────────────────────────────┤
+│ Kernel driver (host)                          │  (amdgpu)
+├──────────────────────────────────────────────┤
+│ GPU hardware                                  │
+└──────────────────────────────────────────────┘
 ```
 
-## 5. The "Golden Triangle" of Compatibility
-The biggest challenge in AI DevOps is version matching. You must ensure compatibility between:
+The golden rule: **the host driver must be new enough for the CUDA runtime inside your container.** Everything above the driver should live in the container image.
 
-  - **NVIDIA Driver Version** (e.g., 535.xx)
-  - **CUDA Version** (e.g., 12.1)
-  - **Framework Version** (PyTorch 2.1.0)
+## 2. CUDA in 2026
 
-## 6. DevOps Infrastructure Implications
-  - **Immutable Images:** Never pip install torch inside a running production container. Use pre-built images from NVIDIA's NGC catalog.
-  - **Kernel Updates:** A simple apt upgrade can break the NVIDIA driver. Use DKMS to automatically rebuild drivers on kernel updates.
-  - **Health Checks:** Use nvidia-smi or the DCGM to monitor XID errors (hardware-level faults).
+- **CUDA 13.x** is current (13.0 shipped in Aug 2025). It drops Maxwell, Pascal and Volta; Turing through Blackwell are supported.
+- CUDA 13 requires the **R580+ driver** branch. Many managed node images (EKS, AKS, GKE) still default to 12.x drivers — check before you bump base images.
+- **Minor-version compatibility:** a 13.x runtime runs on any R580+ driver, so you can upgrade containers without touching nodes, within a major version.
+- Writing raw CUDA C++ is rare for platform teams. Kernels now come from **Triton** (the language), **CUTLASS/CuTe**, FlashAttention/FlashInfer and the frameworks themselves — and Python-native CUDA (`cuda.core`, CuTe DSL) is growing.
 
-## Lessons Learned
-Compatibility is the primary cause of downtime in AI clusters. As a DevOps Engineer, your goal is to pin every version to ensure a predictable, reproducible environment.
+## 3. ROCm in 2026
+
+AMD's ROCm 7 line closed much of the gap: PyTorch, vLLM and SGLang ship first-class ROCm builds, and FP8/FP4 work on MI300/MI350-class GPUs.
+
+- AMD now runs a **production stream (7.2.x)** and faster **preview/core SDK releases (7.1x)** — pin to the production stream for clusters.
+- **HIP** is CUDA-like; `hipify` translates much of existing CUDA code.
+- The ecosystem gap that remains is mostly *long tail* — niche custom kernels and tooling.
+
+## 4. Checking what you have
+
+```bash
+# Driver + max CUDA version supported by the driver
+nvidia-smi
+
+# CUDA toolkit inside the container
+nvcc --version
+
+# What PyTorch was built against, and whether it sees GPUs
+python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"
+
+# AMD
+rocm-smi && amd-smi static
+```
+
+> **Gotcha:** `nvidia-smi` shows the *maximum* CUDA version the driver supports — not what's installed.
+
+## 5. Driver management at scale
+
+Don't hand-install drivers on GPU nodes. Use:
+
+- **NVIDIA GPU Operator** — deploys driver, container toolkit, DCGM exporter, MIG manager and (now) the DRA driver as Kubernetes DaemonSets.
+- **Pre-baked node images** — EKS Accelerated AMIs, AKS GPU node images or Bottlerocket NVIDIA variants for faster scale-up.
+- **AMD GPU Operator** for Instinct clusters.
+
+Pin driver versions in IaC, roll them like any other node change (surge, drain, canary), and alert on DCGM **Xid errors** — they're your early warning for bad hardware.
+
+## Lessons learned
+
+Treat the driver as **infrastructure** and everything above it as **application**. Pin both, test the pair, and upgrade them on separate cadences. That one discipline prevents most GPU outages.

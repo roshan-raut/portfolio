@@ -1,121 +1,36 @@
-# Projects Data
+# Projects shown on the home page and /projects.
+# featured: true  -> also appears on the home page
 - name: "Enterprise CI/CD & Infrastructure Automation"
   description: "Built central DevOps platforms and automated multi-team infrastructure using Terraform modules and custom GitHub Actions. Created standardized repository templates to accelerate CI/CD adoption across the organization."
-  language: "HCL / GitHub Actions"
+  stack: "Terraform · GitHub Actions"
   url: "https://github.com/roshan-raut"
-  topics:
-    - terraform
-    - terragrunt
-    - devops
-    - automation
+  topics: [terraform, terragrunt, platform-engineering, automation]
   featured: true
 
 - name: "Cloud-Native Cluster Management (EKS/AKS)"
-  description: "Designed, deployed, and managed scalable Kubernetes clusters on AWS and Azure. Implemented complex upgrades, monitoring integrations with Grafana/Prometheus, and optimized resource performance."
-  language: "Kubernetes / Helm"
+  description: "Designed, deployed, and managed scalable Kubernetes clusters on AWS and Azure. Implemented upgrades, Grafana/Prometheus monitoring, and resource optimization."
+  stack: "Kubernetes · Helm"
   url: "https://github.com/roshan-raut"
-  topics:
-    - eks
-    - aks
-    - kubernetes
-    - monitoring
+  topics: [eks, aks, kubernetes, observability]
   featured: true
 
 - name: "Azure Cloud Cost Analytics Platform"
-  description: "Developed an automated solution for cloud cost analysis by building Power BI reports integrated with Azure Cost Management API. Enabled data-driven decision making for organizational cloud spend."
-  language: "Power BI / API Integration"
+  description: "Automated cloud cost analysis with Power BI reports built on the Azure Cost Management API, enabling data-driven decisions on organizational cloud spend."
+  stack: "Azure · Power BI"
   url: "https://github.com/roshan-raut"
-  topics:
-    - azure
-    - cloud-cost-management
-    - analytics
+  topics: [azure, finops, analytics]
   featured: true
 
 - name: "Telco Digital Engine Microservices"
-  description: "Architected and developed Python-based microservices (DRF) for a 'Digital Engine' API. Deployed on AWS EKS to bridge high-traffic digital channels with legacy telecommunication systems."
-  language: "Python"
+  description: "Architected Python (DRF) microservices for a 'Digital Engine' API on AWS EKS, bridging high-traffic digital channels with legacy telecom systems."
+  stack: "Python · AWS EKS"
   url: "https://github.com/roshan-raut"
-  topics:
-    - django-rest-framework
-    - microservices
-    - aws-eks
-  featured: true
+  topics: [microservices, django-rest-framework, aws]
+  featured: false
 
 - name: "Serverless E2E Testing Framework"
-  description: "Built an automated end-to-end testing suite utilizing AWS Lambda functions to ensure reliability during rapid CI/CD release cycles."
-  language: "Python / AWS Lambda"
+  description: "Automated end-to-end test suite on AWS Lambda to keep rapid CI/CD release cycles reliable."
+  stack: "Python · AWS Lambda"
   url: "https://github.com/roshan-raut"
-  topics:
-    - aws-lambda
-    - serverless
-    - automated-testing
-  featured: false
-  
-- name: "Wordcount"
-  description: "Python-based word counting application with advanced text analysis features"
-  language: "Python"
-  stars: 0
-  forks: 0
-  url: "https://github.com/roshan-raut/wordcount"
-  topics:
-    - python
-    - text-analysis
-  featured: true
-
-- name: "Profiles REST API"
-  description: "Source code for profiles rest API course - Django REST framework implementation"
-  language: "Python"
-  stars: 0
-  forks: 0
-  url: "https://github.com/roshan-raut/profiles-rest-api"
-  topics:
-    - django
-    - rest-api
-    - python
-  featured: true
-
-- name: "Recipe REST API"
-  description: "Recipe app API source code with full CRUD operations and authentication"
-  language: "Python"
-  stars: 0
-  forks: 0
-  url: "https://github.com/roshan-raut/recipe-rest-api"
-  topics:
-    - django
-    - rest-api
-    - recipe-app
-  featured: true
-
-- name: "MyProject"
-  description: "Java-based project demonstrating various design patterns and best practices"
-  language: "Java"
-  stars: 0
-  forks: 0
-  url: "https://github.com/roshan-raut/MyProject"
-  topics:
-    - java
-    - design-patterns
-  featured: false
-
-- name: "Spring Boot Fork"
-  description: "Forked from spring-projects/spring-boot - Personal experiments with Spring Boot framework"
-  language: "Java"
-  stars: 0
-  forks: 1
-  url: "https://github.com/roshan-raut/spring-boot"
-  topics:
-    - spring-boot
-    - java
-  featured: false
-
-- name: "Django Project"
-  description: "Full-stack Django web application with modern features"
-  language: "Python"
-  stars: 0
-  forks: 0
-  url: "https://github.com/roshan-raut/django_project"
-  topics:
-    - django
-    - python
-    - web-app
+  topics: [serverless, testing, ci-cd]
   featured: false

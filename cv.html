@@ -3,61 +3,64 @@ layout: default
 title: CV
 permalink: /cv/
 ---
-
-<div class="cv-page">
-    <section class="page-header">
-        <h1><i class="fas fa-file-alt"></i> Curriculum Vitae</h1>
-        <p>Professional experience and qualifications</p>
-        <div class="cv-actions">
-            <a href="{{ '/assets/pdf/Roshan-Raut-Resume.pdf' | relative_url }}" class="btn btn-primary" download>
-                <i class="fas fa-download"></i> Download Resume (PDF)
-            </a>
+{% assign profile = site.data.profile %}
+<section class="container page-head cv-head">
+    <div class="cv-id">
+        <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="{{ profile.name }}">
+        <div>
+            <div class="eyebrow mono">~/cv</div>
+            <h1>{{ profile.name }}</h1>
+            <p class="muted lead">{{ profile.tagline }} · {{ profile.location }}</p>
         </div>
-    </section>
+    </div>
+    <a href="{{ '/assets/pdf/Roshan-Raut-Resume.pdf' | relative_url }}" class="btn btn-primary" download>
+        <i class="fas fa-download"></i> Download PDF
+    </a>
+</section>
 
-    <!-- Experience (Add your experience data to profile.yml) -->
-    <section class="cv-section">
-        <h2><i class="fas fa-briefcase"></i> Professional Experience</h2>
-        <div class="cv-content">
-            {% for experience in site.data.experience %}
-            <div class="ex-item-cv">
-                <h3>{{ experience.title }}</h3>
-                <p class="ex-org"><strong>Organization:</strong> {{ experience.organization }}</p>
-                <p class="ex-org"><strong>Duration:</strong> {{ experience.year }}</p>
-                <p class="ex-org"><strong>Location:</strong> {{ experience.location }}</p>
+<section class="container section-sm">
+    <h2 class="cat-title"><i class="fas fa-briefcase accent"></i> Experience</h2>
+    <ol class="timeline">
+        {% for e in site.data.experience %}
+        <li class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+                <div class="timeline-top">
+                    <h3>{{ e.title }}</h3>
+                    <span class="mono muted small">{{ e.year }}</span>
+                </div>
+                <div class="muted">{{ e.organization }} · {{ e.location }}</div>
             </div>
-            {% endfor %}
-        </div>
-    </section>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
 
-    <!-- Education (Add to your profile.yml if needed) -->
-    <section class="cv-section">
-        <h2><i class="fas fa-graduation-cap"></i> Education</h2>
-        <div class="cv-content">
-            <div class="education-item">
-                <h3>Elecrical Engineering</h3>
-                <p class="institution">University of Pune</p>
-                <p class="year">2010 - 2014</p>
-            </div>
-        </div>
-    </section>
+<section class="container section-sm">
+    <h2 class="cat-title"><i class="fas fa-graduation-cap accent"></i> Education</h2>
+    <div class="card static">
+        <h3 class="card-title">Bachelor of Engineering, Electrical Engineering</h3>
+        <p class="muted">University of Pune · 2010 – 2014</p>
+    </div>
+</section>
 
-    <!-- Contact Information -->
-    <section class="cv-section">
-        <h2><i class="fas fa-address-card"></i> Contact Information</h2>
-        <div class="cv-content contact-info">
-            {% if site.data.profile.email %}
-            <p><i class="fas fa-envelope"></i> <a href="mailto:{{ site.data.profile.email }}">{{ site.data.profile.email }}</a></p>
-            {% endif %}
-            {% if site.data.profile.github %}
-            <p><i class="fab fa-github"></i> <a href="{{ site.data.profile.github }}" target="_blank">{{ site.data.profile.github }}</a></p>
-            {% endif %}
-            {% if site.data.profile.linkedin %}
-            <p><i class="fab fa-linkedin"></i> <a href="{{ site.data.profile.linkedin }}" target="_blank">{{ site.data.profile.linkedin }}</a></p>
-            {% endif %}
-            {% if site.data.profile.location %}
-            <p><i class="fas fa-map-marker-alt"></i> {{ site.data.profile.location }}</p>
-            {% endif %}
+<section class="container section-sm">
+    <h2 class="cat-title"><i class="fas fa-certificate accent"></i> Certifications</h2>
+    <div class="cert-grid">
+        {% for cert in site.data.certifications %}
+        <div class="cert {% if cert.issueddate contains "Expired" %}cert-expired{% endif %}">
+            <div class="cert-title">{{ cert.title }}</div>
+            <div class="mono muted small">{{ cert.issuedby }} · {{ cert.issueddate }}</div>
         </div>
-    </section>
-</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section-sm">
+    <h2 class="cat-title"><i class="fas fa-address-card accent"></i> Contact</h2>
+    <div class="contact-row">
+        {% if profile.email %}<a class="btn btn-ghost" href="mailto:{{ profile.email }}"><i class="fas fa-envelope"></i> {{ profile.email }}</a>{% endif %}
+        {% if profile.linkedin %}<a class="btn btn-ghost" href="{{ profile.linkedin }}" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>{% endif %}
+        {% if profile.github %}<a class="btn btn-ghost" href="{{ profile.github }}" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>{% endif %}
+    </div>
+</section>

@@ -1,26 +1,31 @@
 # Profile Data
 name: "Roshan Raut"
 username: "roshan-raut"
-tagline: "DevOps | AWS | Azure | Terraform | CKAD"
+tagline: "Platform & AI Infrastructure Engineer"
 location: "Netherlands"
 email: "raut.roshan3110@gmail.com"
 github: "https://github.com/roshan-raut"
 linkedin: "https://www.linkedin.com/in/roshan-raut-devops-engineer"
 
 bio: |
-  Forward-thinking DevOps Engineer with strong expertise in CI/CD, Build Engineering, and Release Management across enterprise applications. Skilled in AWS and Azure cloud platforms and automating it with infra as code with Terraform/Terragrunt, containerization with Docker, and managing Kubernetes clusters for scalable deployments.
+  Innovation Engineer with a DevOps and cloud platform background, now focused on the infrastructure that makes AI work in production — GPUs on Kubernetes, model serving, MLOps pipelines and keeping the bill under control.
 
-  **Over the years, I have:**
-  * ☑️ Migrated applications to the AWS/Azure cloud, ensuring scalability, performance, and cost efficiency.
-  * ☑️ Designed & automated CI/CD pipelines using Github, Jenkins, AWS CDK, Helm, and Terraform.
-  * ☑️ Managed Kubernetes clusters (EKS/AKS), enabling seamless deployments and operational resilience.
-  * ☑️ Resolved critical incidents and optimized cloud performance, improving system reliability.
-  * ☑️ Monitoring and observability using Prometheus and Grafana.
-  * ☑️ Collaborated across teams to drive DevOps best practices, cloud security, and automation.
+  Over the years I have migrated applications to AWS and Azure, built CI/CD platforms with GitHub Actions, Jenkins, Helm and Terraform/Terragrunt, run EKS/AKS clusters with Prometheus and Grafana observability, and resolved production incidents across enterprise systems.
 
-  Passionate about cloud automation, DevOps best practices, and problem-solving.
-  
-  **Let's connect and talk Cloud & DevOps!**
+  I write about what I learn — mostly where cloud-native engineering meets AI.
+
+highlights:
+  - "Migrated enterprise apps to AWS & Azure"
+  - "CI/CD platforms with GitHub Actions, Jenkins, Helm, Terraform"
+  - "Operated EKS/AKS clusters at scale"
+  - "Observability with Prometheus & Grafana"
+  - "Certified on Azure, Databricks, Airflow"
+
+focus:
+  - "GPU scheduling with Kubernetes DRA"
+  - "LLM inference: vLLM, llm-d, KV-cache-aware routing"
+  - "MLOps & LLMOps on Databricks and Airflow"
+  - "FinOps for AI workloads"
 
 skills:
   - category: "Programming Languages"
@@ -30,12 +35,13 @@ skills:
       - Bash
       - SQL
   
-  - category: "Frameworks & Libraries"
+  - category: "AI & Data Platforms"
     items:
-      - Django
-      - Spring Boot
-      - REST API
-      - Flask
+      - Databricks
+      - Apache Airflow
+      - GPU workloads on Kubernetes
+      - LLM serving (vLLM)
+      - Django REST Framework
   
   - category: "Cloud & DevOps"
     items:
@@ -62,13 +68,3 @@ skills:
       - Grafana
       - Prometheus
       - ELK
-
-achievements:
-  - title: "Arctic Code Vault Contributor"
-    description: "Contributed to repositories stored in the GitHub Arctic Code Vault"
-    icon: "🏆"
-
-stats:
-  repositories: 15
-  contributions_this_year: 3
-  years_on_github: 7

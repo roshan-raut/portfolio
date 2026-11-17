@@ -1,62 +1,37 @@
 ---
 layout: default
-title: Blogs
+title: Writing
 permalink: /blogs/
 ---
+{% assign posts = site.blogs | sort: "date" | reverse %}
+{% assign all_tags = "" | split: "" %}
+{% for p in posts %}{% assign all_tags = all_tags | concat: p.tags %}{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
+{% assign top_tags = "" | split: "" %}
+{% for t in all_tags %}{% assign n = site.blogs | where_exp: "p", "p.tags contains t" %}{% if n.size >= 2 %}{% assign top_tags = top_tags | push: t %}{% endif %}{% endfor %}
 
-<div class="blogs-page">
-    <section class="page-header">
-        <h1><i class="fas fa-blog"></i> Blog Posts</h1>
-        <p>Technical guides, cheatsheets, and DevOps insights</p>
-    </section>
+<section class="container page-head">
+    <div class="eyebrow mono">~/writing</div>
+    <h1>Writing</h1>
+    <p class="muted lead">Field notes on AI infrastructure — GPUs, Kubernetes, LLM serving, MLOps and FinOps. Updated as the stack moves.</p>
+</section>
 
-    <div class="blogs-list">
-        {% for blog_data in site.data.blogs %}
-            {% assign blog_post = site.blogs | where: "slug", blog_data.slug | first %}
-            
-            <article class="blog-card" id="{{ blog_data.slug }}">
-                <details>
-                    <summary>
-                        <div class="blog-header-content">
-                            {% if blog_data.featured %}
-                                <span class="featured-badge" style="margin-bottom: 8px;">
-                                    <i class="fas fa-star"></i> Featured
-                                </span>
-                            {% endif %}
-                            
-                            <h2 class="blog-title">{{ blog_data.title }}</h2>
-                            
-                            <div class="blog-meta">
-                                <span><i class="far fa-calendar"></i> {{ blog_data.date | date: "%B %d, %Y" }}</span>
-                                <span><i class="far fa-user"></i> {{ blog_data.author }}</span>
-                            </div>
-                            
-                            <p class="blog-excerpt">{{ blog_data.excerpt }}</p>
-                        </div>
-                    </summary>
+<section class="container">
+    <div class="filter-bar">
+        <div class="search-field">
+            <i class="fas fa-magnifying-glass muted"></i>
+            <input type="search" id="post-search" placeholder="Filter posts…" aria-label="Filter posts">
+        </div>
+        <div class="chips filter-chips" id="tag-filters">
+            <button class="chip chip-btn active" data-tag="">all</button>
+            {% for t in top_tags %}<button class="chip chip-btn" data-tag="{{ t }}">#{{ t }}</button>{% endfor %}
+        </div>
+    </div>
 
-                    <div class="blog-full-content">
-                        {% if blog_post %}
-                            {{ blog_post.content }}
-                        {% else %}
-                            <p><em>Content not found. Please ensure the file is in the _blogs folder.</em></p>
-                        {% endif %}
-                        
-                        <div class="blog-tags" style="margin-top: 16px;">
-                            {% for tag in blog_data.tags %}
-                                <span class="tag">#{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </details>
-            </article>
+    <div class="card-grid three" id="post-grid">
+        {% for post in posts %}
+        {% include post-card.html post=post %}
         {% endfor %}
     </div>
-
-    {% if site.data.blogs.size == 0 %}
-    <div class="empty-state">
-        <i class="fas fa-pencil-alt"></i>
-        <p>No blog posts yet. Check back soon!</p>
-    </div>
-    {% endif %}
-</div>
+    <p class="muted mono empty" id="no-results" hidden>// no posts match that filter</p>
+</section>

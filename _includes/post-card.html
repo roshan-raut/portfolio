@@ -1,0 +1,10 @@
+{% assign p = include.post %}
+<a class="card post-card" href="{{ p.url | relative_url }}" data-tags="{{ p.tags | join: ' ' }}" data-title="{{ p.title | downcase | escape }} {{ p.summary | downcase | escape }}">
+    <div class="card-top mono small">
+        {% if p.series %}<span class="accent">{{ p.series }} · {{ p.part }}</span>{% else %}<span class="accent">article</span>{% endif %}
+        <span class="muted">{{ p.date | date: "%b %Y" }}</span>
+    </div>
+    <h3 class="card-title">{{ p.title }}</h3>
+    <p class="card-text">{{ p.summary }}</p>
+    <div class="chips small">{% for t in p.tags limit: 3 %}<span class="chip">#{{ t }}</span>{% endfor %}</div>
+</a>
