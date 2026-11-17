@@ -8,15 +8,24 @@ permalink: /blogs/
 {% for p in posts %}{% assign all_tags = all_tags | concat: p.tags %}{% endfor %}
 {% assign all_tags = all_tags | uniq | sort %}
 {% assign top_tags = "" | split: "" %}
-{% for t in all_tags %}{% assign n = site.blogs | where_exp: "p", "p.tags contains t" %}{% if n.size >= 2 %}{% assign top_tags = top_tags | push: t %}{% endif %}{% endfor %}
+{% for t in all_tags %}{% assign n = site.blogs | where_exp: "p", "p.tags contains t" %}{% if n.size >= 3 %}{% assign top_tags = top_tags | push: t %}{% endif %}{% endfor %}
+{% assign loose_posts = site.blogs | where_exp: "p", "p.series == nil" | sort: "date" | reverse %}
 
 <section class="container page-head">
     <div class="eyebrow mono">~/writing</div>
     <h1>Writing</h1>
-    <p class="muted lead">Field notes on AI infrastructure — GPUs, Kubernetes, LLM serving, MLOps and FinOps. Updated as the stack moves.</p>
+    <p class="muted lead">Field notes from networking fundamentals up to AI infrastructure — organised into series you can read in order.</p>
 </section>
 
 <section class="container">
+    <div class="segments" id="segments" role="tablist" aria-label="Series">
+        <button class="segment active" data-series="" role="tab"><i class="fas fa-border-all"></i> All <span class="seg-count mono">{{ site.blogs.size }}</span></button>
+        {% for s in site.data.series %}{% assign sp = site.blogs | where: "series", s.name %}
+        <button class="segment" data-series="{{ s.slug }}" role="tab"><i class="fas {{ s.icon }}"></i> {{ s.name }} <span class="seg-count mono">{{ sp.size }}</span></button>
+        {% endfor %}
+        {% if loose_posts.size > 0 %}<button class="segment" data-series="articles" role="tab"><i class="fas fa-pen-nib"></i> Articles <span class="seg-count mono">{{ loose_posts.size }}</span></button>{% endif %}
+    </div>
+
     <div class="filter-bar">
         <div class="search-field">
             <i class="fas fa-magnifying-glass muted"></i>
@@ -28,10 +37,33 @@ permalink: /blogs/
         </div>
     </div>
 
-    <div class="card-grid three" id="post-grid">
-        {% for post in posts %}
-        {% include post-card.html post=post %}
-        {% endfor %}
+    <div id="post-grid">
+        {% for s in site.data.series %}{% assign sp = site.blogs | where: "series", s.name | sort: "part" %}{% if sp.size > 0 %}
+        <div class="series-block" data-series="{{ s.slug }}">
+            <div class="series-head">
+                <div class="series-icon"><i class="fas {{ s.icon }}"></i></div>
+                <div>
+                    <h2 class="series-title">{{ s.name }} <span class="muted mono small">{{ sp.size }} parts</span></h2>
+                    <p class="muted series-blurb">{{ s.blurb }}</p>
+                </div>
+                <a class="btn btn-ghost series-start" href="{{ sp.first.url | relative_url }}">Start at part 1 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-grid three">
+                {% for post in sp %}{% include post-card.html post=post %}{% endfor %}
+            </div>
+        </div>
+        {% endif %}{% endfor %}
+        {% if loose_posts.size > 0 %}
+        <div class="series-block" data-series="articles">
+            <div class="series-head">
+                <div class="series-icon"><i class="fas fa-pen-nib"></i></div>
+                <div><h2 class="series-title">Articles</h2><p class="muted series-blurb">Standalone posts.</p></div>
+            </div>
+            <div class="card-grid three">
+                {% for post in loose_posts %}{% include post-card.html post=post %}{% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
     <p class="muted mono empty" id="no-results" hidden>// no posts match that filter</p>
 </section>

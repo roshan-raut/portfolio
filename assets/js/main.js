@@ -10,6 +10,7 @@
     var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('theme', next); } catch (e) {}
+    document.dispatchEvent(new CustomEvent('themechange'));
   });
 
   /* Mobile menu */
@@ -56,29 +57,41 @@
     els.forEach(function (el) { io.observe(el); });
   }
 
-  /* Blog filter */
+  /* Blog filter: series segments + tag chips + search */
   var grid = $('#post-grid');
   if (grid) {
     var search = $('#post-search'), chips = $$('#tag-filters .chip-btn'), empty = $('#no-results');
-    var activeTag = new URLSearchParams(location.search).get('tag') || '';
+    var segs = $$('#segments .segment'), blocks = $$('.series-block', grid);
+    var params = new URLSearchParams(location.search);
+    var activeTag = params.get('tag') || '', activeSeries = params.get('series') || '';
+    var setParam = function (k, v) {
+      var u = new URL(location.href);
+      if (v) u.searchParams.set(k, v); else u.searchParams.delete(k);
+      history.replaceState(null, '', u);
+    };
     var apply = function () {
       var q = (search.value || '').toLowerCase().trim(), shown = 0;
-      $$('.post-card', grid).forEach(function (c) {
-        var okTag = !activeTag || (' ' + c.dataset.tags + ' ').indexOf(' ' + activeTag + ' ') > -1;
-        var okQ = !q || c.dataset.title.indexOf(q) > -1 || c.dataset.tags.indexOf(q) > -1;
-        var vis = okTag && okQ; c.hidden = !vis; if (vis) shown++;
+      blocks.forEach(function (b) {
+        var inSeg = !activeSeries || b.dataset.series === activeSeries, inBlock = 0;
+        $$('.post-card', b).forEach(function (c) {
+          var okTag = !activeTag || (' ' + c.dataset.tags + ' ').indexOf(' ' + activeTag + ' ') > -1;
+          var okQ = !q || c.dataset.title.indexOf(q) > -1 || c.dataset.tags.indexOf(q) > -1;
+          var vis = inSeg && okTag && okQ; c.hidden = !vis; if (vis) inBlock++;
+        });
+        b.hidden = inBlock === 0; shown += inBlock;
       });
       chips.forEach(function (ch) { ch.classList.toggle('active', ch.dataset.tag === activeTag); });
+      segs.forEach(function (sg) {
+        var on = sg.dataset.series === activeSeries;
+        sg.classList.toggle('active', on); sg.setAttribute('aria-selected', on);
+      });
       empty.hidden = shown > 0;
     };
     chips.forEach(function (ch) {
-      ch.addEventListener('click', function () {
-        activeTag = ch.dataset.tag;
-        var u = new URL(location.href);
-        if (activeTag) u.searchParams.set('tag', activeTag); else u.searchParams.delete('tag');
-        history.replaceState(null, '', u);
-        apply();
-      });
+      ch.addEventListener('click', function () { activeTag = ch.dataset.tag; setParam('tag', activeTag); apply(); });
+    });
+    segs.forEach(function (sg) {
+      sg.addEventListener('click', function () { activeSeries = sg.dataset.series; setParam('series', activeSeries); apply(); });
     });
     search.addEventListener('input', apply);
     apply();
@@ -108,6 +121,79 @@
         heads.forEach(function (h) { hio.observe(h); });
       }
     } else if (toc) { toc.parentElement.hidden = true; }
+
+    /* Mermaid diagrams: ```mermaid fences become themed SVG diagrams */
+    var mBlocks = $$('code.language-mermaid', prose).map(function (code) {
+      return code.closest('div.highlighter-rouge') || code.closest('pre') || code;
+    });
+    if (mBlocks.length) {
+      var diagrams = mBlocks.map(function (block) {
+        var fig = document.createElement('figure');
+        fig.className = 'diagram diagram-mermaid';
+        fig.dataset.src = block.textContent.trim();
+        fig.innerHTML = '<div class="diagram-loading mono small muted">// rendering diagram…</div>';
+        block.parentNode.replaceChild(fig, block);
+        return fig;
+      });
+      var css = function (n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
+      var renderAll = function (mermaid) {
+        mermaid.initialize({
+          startOnLoad: false, securityLevel: 'strict', theme: 'base',
+          fontFamily: 'Geist, system-ui, sans-serif',
+          flowchart: { curve: 'basis', htmlLabels: true },
+          sequence: { mirrorActors: false, messageAlign: 'center' },
+          themeVariables: {
+            background: css('--bg-elev'), mainBkg: css('--surface-solid'),
+            primaryColor: css('--surface-solid'), primaryTextColor: css('--text'),
+            primaryBorderColor: css('--accent'), secondaryColor: css('--bg-elev'),
+            tertiaryColor: css('--bg-elev'), lineColor: css('--muted'), textColor: css('--text'),
+            clusterBkg: css('--bg-elev'), clusterBorder: css('--border-strong'),
+            actorBkg: css('--surface-solid'), actorBorder: css('--accent'), actorTextColor: css('--text'),
+            actorLineColor: css('--border-strong'), signalColor: css('--text-2'), signalTextColor: css('--text'),
+            noteBkgColor: css('--bg-elev'), noteBorderColor: css('--accent-2'), noteTextColor: css('--text-2'),
+            labelBoxBkgColor: css('--surface-solid'), labelBoxBorderColor: css('--border-strong'),
+            edgeLabelBackground: css('--bg-elev'), fontSize: '15px'
+          }
+        });
+        // Render one at a time: concurrent mermaid.render calls can clobber each other.
+        var stamp = Date.now();
+        diagrams.reduce(function (chain, fig, i) {
+          return chain.then(function () {
+            return mermaid.render('mmd-' + i + '-' + stamp, fig.dataset.src).then(function (r) {
+              fig.innerHTML = r.svg;
+            }).catch(function () {
+              fig.innerHTML = '<pre><code></code></pre>';
+              fig.querySelector('code').textContent = fig.dataset.src;
+            });
+          });
+        }, Promise.resolve());
+      };
+      import('https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs').then(function (mod) {
+        var mermaid = mod.default;
+        renderAll(mermaid);
+        document.addEventListener('themechange', function () { renderAll(mermaid); });
+      }).catch(function () {
+        diagrams.forEach(function (fig) {
+          fig.innerHTML = '<pre><code></code></pre>';
+          fig.querySelector('code').textContent = fig.dataset.src;
+        });
+      });
+    }
+
+    /* Animated SVG diagrams: honour reduced motion, add a replay control */
+    $$('figure.diagram-anim', prose).forEach(function (fig) {
+      var svg = fig.querySelector('svg');
+      if (!svg || !svg.pauseAnimations) return;
+      var btn = document.createElement('button');
+      btn.className = 'diagram-btn mono'; btn.type = 'button';
+      var setLabel = function () { btn.innerHTML = svg.animationsPaused() ? '<i class="fas fa-play"></i> play' : '<i class="fas fa-pause"></i> pause'; };
+      btn.addEventListener('click', function () {
+        if (svg.animationsPaused()) svg.unpauseAnimations(); else svg.pauseAnimations();
+        setLabel();
+      });
+      if (reduceMotion) svg.pauseAnimations();
+      fig.appendChild(btn); setLabel();
+    });
 
     $$('div.highlighter-rouge', prose).forEach(function (block) {
       var m = block.className.match(/language-(\w+)/);
