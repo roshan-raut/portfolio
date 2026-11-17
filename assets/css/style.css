@@ -314,6 +314,35 @@ a.card:hover::before { opacity: 1; }
 .search-field input { flex: 1; border: 0; background: transparent; color: var(--text); font: inherit; outline: none; min-width: 0; }
 .empty { padding: 32px 0; }
 
+/* Series segments */
+.segments {
+  display: flex; gap: 6px; padding: 5px; margin-bottom: 20px; width: fit-content; max-width: 100%;
+  border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow-x: auto; scrollbar-width: none;
+}
+.segment {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer;
+  padding: 9px 14px; border: 0; border-radius: 10px; background: transparent;
+  color: var(--muted); font: inherit; font-size: 0.9rem;
+}
+.segment:hover { color: var(--text); }
+.segment.active { background: var(--glow); color: var(--accent); }
+.seg-count { font-size: 0.72rem; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); }
+.segment.active .seg-count { border-color: var(--accent); }
+.series-block { margin-bottom: 48px; }
+.series-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+.series-head > div:nth-child(2) { flex: 1; }
+.series-icon {
+  flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--glow); color: var(--accent); border: 1px solid var(--border);
+}
+.series-title { font-size: 1.3rem; margin: 0 0 4px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.series-blurb { margin: 0; max-width: 680px; }
+.series-start { flex: none; }
+@media (max-width: 700px) {
+  .series-head { flex-wrap: wrap; }
+  .series-start { width: 100%; justify-content: center; }
+}
+
 /* CV */
 .cv-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
 .cv-id { display: flex; gap: 20px; align-items: center; }
@@ -395,6 +424,42 @@ a.card:hover::before { opacity: 1; }
 .prose th, .prose td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .prose th { color: var(--text); font-weight: 600; border-bottom-color: var(--border-strong); white-space: nowrap; }
 .prose tr:hover td { background: var(--surface); }
+
+/* Diagrams (Mermaid + animated SVG) */
+.prose figure.diagram {
+  position: relative; margin: 28px 0; padding: 22px 18px 16px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--bg-elev); overflow-x: auto; text-align: center;
+}
+.prose figure.diagram svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+/* On phones keep diagrams legible: scroll sideways inside the frame instead of shrinking */
+@media (max-width: 700px) {
+  .prose figure.diagram { text-align: left; }
+  .prose figure.diagram svg { min-width: 600px; }
+  .prose figure.diagram figcaption { position: sticky; left: 0; max-width: calc(100vw - 72px); }
+}
+.prose figure.diagram figcaption {
+  margin-top: 12px; font-size: 0.82rem; color: var(--muted); font-family: "Geist Mono", monospace;
+}
+.diagram-loading { padding: 40px 0; }
+.diagram-btn {
+  position: absolute; top: 10px; right: 10px; height: 26px; padding: 0 10px; border-radius: 6px;
+  border: 1px solid var(--border-strong); background: var(--surface-solid); color: var(--text-2);
+  font-size: 0.72rem; cursor: pointer; display: inline-flex; gap: 6px; align-items: center;
+}
+.diagram-btn:hover { color: var(--accent); border-color: var(--accent); }
+/* Shared classes for hand-drawn SVG diagrams */
+.dg-box { fill: var(--surface-solid); stroke: var(--border-strong); stroke-width: 1.5; }
+.dg-box-accent { fill: var(--glow); stroke: var(--accent); stroke-width: 1.5; }
+.dg-text { fill: var(--text); font: 500 14px Geist, system-ui, sans-serif; }
+.dg-sub { fill: var(--muted); font: 12px "Geist Mono", monospace; }
+.dg-label { fill: var(--text-2); font: 12px "Geist Mono", monospace; }
+.dg-line { stroke: var(--border-strong); stroke-width: 1.5; fill: none; }
+.dg-dash { stroke: var(--border-strong); stroke-width: 1.5; fill: none; stroke-dasharray: 5 5; }
+.dg-arrow { fill: var(--muted); }
+.dg-packet { fill: var(--accent); }
+.dg-packet-2 { fill: var(--accent-2); }
+.dg-packet-3 { fill: var(--accent-3); }
+.dg-glow { fill: var(--accent); opacity: .18; }
 
 /* Code blocks (Rouge) */
 .prose div.highlighter-rouge, .prose pre { position: relative; }

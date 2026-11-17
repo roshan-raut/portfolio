@@ -5,7 +5,7 @@ A Jekyll-based portfolio and AI-infrastructure blog: dark/light themes, ⌘K com
 ## Features
 
 - **Overview Page**: Profile summary, skills, popular projects, achievements, and GitHub statistics
-- **Writing Page**: Searchable, tag-filterable posts; each post has its own page with TOC, reading time, series nav and copy-code buttons
+- **Writing Page**: Posts grouped into series segments (Foundations, Infra for AI), searchable and tag-filterable; each post has its own page with TOC, reading time, series nav and copy-code buttons
 - **Projects Page**: Complete list of projects with technologies and links
 - **Useful Links Page**: Curated resources organized by category
 - **CV Page**: Professional resume with downloadable PDF versions
@@ -117,6 +117,13 @@ short: "Sidebar title"
 updated: 2026-12-05
 ---
 ```
+
+**Diagrams.** Two options inside posts:
+
+- A fenced ` ```mermaid ` block (flowchart, sequence diagram, etc.) is rendered client-side by Mermaid and re-themed for light/dark automatically.
+- Hand-drawn or animated SVGs live in `_includes/diagrams/` and are added with `{% raw %}{% include diagrams/dns-lookup.html %}{% endraw %}`. Style them with the `dg-*` classes in `style.css` so they follow the theme. Wrap animated ones in `<figure class="diagram diagram-anim">` to get a pause/play button and reduced-motion support.
+
+Each series is a segment (tab) on the writing page. Segments are defined in `_data/series.yml` (name, icon, blurb, order). To start a new segment, add an entry there whose `name` matches the posts' `series:` value. Posts without a series appear under "Articles".
 
 ### Update Useful Links
 

@@ -1,0 +1,11 @@
+# Segments on the /blogs/ page, in display order.
+# `name` must match the `series:` front matter of the posts in that segment.
+- name: "Foundations"
+  slug: "foundations"
+  icon: "fa-layer-group"
+  blurb: "The basics everything else sits on: how the internet moves packets, DNS, HTTP, TLS and certificates, SSO and Linux. Start here."
+
+- name: "Infra for AI"
+  slug: "infra-for-ai"
+  icon: "fa-microchip"
+  blurb: "Running AI in production: GPUs, Kubernetes, distributed training, LLM serving, MLOps, networking and FinOps."
