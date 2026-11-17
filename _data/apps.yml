@@ -1,0 +1,8 @@
+# Mobile apps. Each app gets /apps/<slug>/, /apps/<slug>/privacy/ and /apps/<slug>/support/
+# (pages live in apps/<slug>/). Use the privacy and support URLs in App Store Connect / Play Console.
+- name: "Namaste Dutch"
+  slug: "namaste-dutch"
+  emoji: "🌷"
+  tagline: "Learn Dutch in English, Hindi, Marathi, Tamil or Telugu — from A1 to the A2 inburgering exam."
+  platforms: [iOS, Android]
+  bundle_id: "com.namastedutch.app"

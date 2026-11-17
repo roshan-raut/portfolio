@@ -1,0 +1,19 @@
+---
+layout: default
+---
+<article class="container post">
+    {% if page.back_url %}
+    <a class="back-link mono" href="{{ page.back_url | relative_url }}"><i class="fas fa-arrow-left"></i> {{ page.back_label | default: 'back' }}</a>
+    {% endif %}
+    <header class="post-header">
+        {% if page.eyebrow %}<div class="eyebrow mono">{{ page.eyebrow }}</div>{% endif %}
+        <h1 class="post-title">{{ page.heading | default: page.title }}</h1>
+        {% if page.summary %}<p class="post-summary">{{ page.summary }}</p>{% endif %}
+        {% if page.last_updated %}
+        <div class="post-meta mono"><span><i class="fas fa-rotate"></i> last updated {{ page.last_updated | date: "%B %d, %Y" }}</span></div>
+        {% endif %}
+    </header>
+    <div class="prose page-prose">
+        {{ content }}
+    </div>
+</article>
