@@ -1,0 +1,29 @@
+---
+layout: default
+title: Apps
+permalink: /apps/
+---
+<section class="container page-head">
+    <div class="eyebrow mono">~/apps</div>
+    <h1>Apps</h1>
+    <p class="muted lead">Mobile apps I build for iOS and Android.</p>
+</section>
+
+<section class="container">
+    <div class="card-grid two">
+        {% for app in site.data.apps %}
+        <div class="card static app-card">
+            <div class="card-top">
+                <h2 class="card-title"><span class="app-emoji">{{ app.emoji }}</span> {{ app.name }}</h2>
+                <span class="mono muted small">{{ app.platforms | join: " · " }}</span>
+            </div>
+            <p class="card-text">{{ app.tagline }}</p>
+            <div class="contact-row">
+                <a class="btn btn-ghost" href="{{ '/apps/' | append: app.slug | append: '/' | relative_url }}"><i class="fas fa-mobile-screen"></i> About</a>
+                <a class="btn btn-ghost" href="{{ '/apps/' | append: app.slug | append: '/privacy/' | relative_url }}"><i class="fas fa-shield-halved"></i> Privacy</a>
+                <a class="btn btn-ghost" href="{{ '/apps/' | append: app.slug | append: '/support/' | relative_url }}"><i class="far fa-life-ring"></i> Support</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>

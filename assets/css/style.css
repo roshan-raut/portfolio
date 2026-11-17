@@ -321,6 +321,12 @@ a.card:hover::before { opacity: 1; }
 .contact-row { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (max-width: 600px) { .contact-row .btn { width: 100%; justify-content: center; overflow: hidden; text-overflow: ellipsis; } }
 
+/* Apps & plain pages */
+.page-prose { max-width: 760px; }
+.app-card { gap: 14px; }
+.app-emoji { margin-right: 4px; }
+.app-card .btn { height: 38px; padding: 0 14px; font-size: 0.85rem; }
+
 /* Footer */
 .footer { margin-top: 80px; border-top: 1px solid var(--border); padding: 28px 0; font-size: 0.82rem; }
 .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }

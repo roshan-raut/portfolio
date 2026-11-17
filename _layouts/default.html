@@ -38,6 +38,7 @@
                 <a href="{{ '/' | relative_url }}" class="{% if u == '/' %}active{% endif %}">home</a>
                 <a href="{{ '/blogs/' | relative_url }}" class="{% if u contains '/blogs' %}active{% endif %}">writing</a>
                 <a href="{{ '/projects/' | relative_url }}" class="{% if u contains '/projects' %}active{% endif %}">projects</a>
+                <a href="{{ '/apps/' | relative_url }}" class="{% if u contains '/apps' %}active{% endif %}">apps</a>
                 <a href="{{ '/links/' | relative_url }}" class="{% if u contains '/links' %}active{% endif %}">resources</a>
                 <a href="{{ '/cv/' | relative_url }}" class="{% if u contains '/cv' %}active{% endif %}">cv</a>
             </nav>
@@ -89,6 +90,10 @@
         {"t":"Writing","u":"{{ '/blogs/' | relative_url }}","k":"page"},
         {"t":"Projects","u":"{{ '/projects/' | relative_url }}","k":"page"},
         {"t":"Resources","u":"{{ '/links/' | relative_url }}","k":"page"},
+        {"t":"Apps","u":"{{ '/apps/' | relative_url }}","k":"page"},{% for a in site.data.apps %}
+        {"t":{{ a.name | jsonify }},"u":"{{ '/apps/' | append: a.slug | append: '/' | relative_url }}","k":"app","d":{{ a.tagline | jsonify }}},
+        {"t":{{ a.name | append: ' – Privacy Policy' | jsonify }},"u":"{{ '/apps/' | append: a.slug | append: '/privacy/' | relative_url }}","k":"app"},
+        {"t":{{ a.name | append: ' – Support' | jsonify }},"u":"{{ '/apps/' | append: a.slug | append: '/support/' | relative_url }}","k":"app"},{% endfor %}
         {"t":"CV","u":"{{ '/cv/' | relative_url }}","k":"page"}{% assign posts = site.blogs | sort: 'date' | reverse %}{% for p in posts %},
         {"t":{{ p.title | jsonify }},"u":"{{ p.url | relative_url }}","k":"post","d":{{ p.summary | jsonify }},"g":{{ p.tags | join: ' ' | jsonify }}}{% endfor %}
       ];
