@@ -1,86 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.lang | default: 'en' }}" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} - {{ site.title }}</title>
+    <meta name="color-scheme" content="dark light">
+    <script>
+      // Apply saved theme before paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    {% seo %}
+    {% feed_meta %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0f14'/><text x='5' y='22' font-family='monospace' font-size='16' fill='%2334d399'>&gt;_</text></svg>">
 </head>
 <body>
-    <!-- GitHub-style Header -->
-    <header class="header">
-        <div class="container header-content">
-            <div class="header-left">
-                <a href="{{ '/' | relative_url }}" class="site-title">
-                    <i class="fab fa-github"></i> {{ site.author.username }}
-                </a>
-            </div>
-            <nav class="header-nav">
-                <a href="{{ '/' | relative_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">
-                    <i class="fas fa-home"></i> Overview
-                </a>
-                <a href="{{ '/blogs' | relative_url }}" class="nav-link {% if page.url contains 'blogs' %}active{% endif %}">
-                    <i class="fas fa-blog"></i> Blogs
-                </a>
-                <a href="{{ '/projects' | relative_url }}" class="nav-link {% if page.url contains 'projects' %}active{% endif %}">
-                    <i class="fas fa-folder"></i> Projects
-                </a>
-                <a href="{{ '/links' | relative_url }}" class="nav-link {% if page.url contains 'links' %}active{% endif %}">
-                    <i class="fas fa-link"></i> Useful Links
-                </a>
-                <a href="{{ '/cv' | relative_url }}" class="nav-link {% if page.url contains 'cv' %}active{% endif %}">
-                    <i class="fas fa-file-alt"></i> CV
-                </a>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+    <div class="read-progress" aria-hidden="true"></div>
+
+    <header class="nav">
+        <div class="container nav-inner">
+            <a href="{{ '/' | relative_url }}" class="brand" aria-label="Home">
+                <span class="brand-prompt">~/</span><span class="brand-name">roshan-raut</span><span class="caret"></span>
+            </a>
+            <nav class="nav-links" id="nav-links">
+                {% assign u = page.url %}
+                <a href="{{ '/' | relative_url }}" class="{% if u == '/' %}active{% endif %}">home</a>
+                <a href="{{ '/blogs/' | relative_url }}" class="{% if u contains '/blogs' %}active{% endif %}">writing</a>
+                <a href="{{ '/projects/' | relative_url }}" class="{% if u contains '/projects' %}active{% endif %}">projects</a>
+                <a href="{{ '/links/' | relative_url }}" class="{% if u contains '/links' %}active{% endif %}">resources</a>
+                <a href="{{ '/cv/' | relative_url }}" class="{% if u contains '/cv' %}active{% endif %}">cv</a>
             </nav>
+            <div class="nav-actions">
+                <button class="kbd-btn" id="open-palette" type="button" aria-label="Search (Ctrl K)">
+                    <i class="fas fa-magnifying-glass"></i><span class="hide-sm">Search</span><kbd class="hide-sm">⌘K</kbd>
+                </button>
+                <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle theme">
+                    <i class="fas fa-sun icon-light"></i><i class="fas fa-moon icon-dark"></i>
+                </button>
+                <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Menu" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Profile Section (shown on all pages) -->
-    <div class="profile-section">
-        <div class="container">
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <img src="{{ site.author.avatar | relative_url }}" alt="{{ site.author.name }}">
-                </div>
-                <div class="profile-info">
-                    <h1 class="profile-name">{{ site.author.name }}</h1>
-                    <p class="profile-username">{{ site.author.username }}</p>
-                    <p class="profile-bio">{{ site.author.bio }}</p>
-                    <div class="profile-links">
-                        {% if site.data.profile.github %}
-                        <a href="{{ site.data.profile.github }}" target="_blank" class="profile-link">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                        {% endif %}
-                        {% if site.data.profile.linkedin %}
-                        <a href="{{ site.data.profile.linkedin }}" target="_blank" class="profile-link">
-                            <i class="fab fa-linkedin"></i> LinkedIn
-                        </a>
-                        {% endif %}
-                        {% if site.data.profile.email %}
-                        <a href="mailto:{{ site.data.profile.email }}" class="profile-link">
-                            <i class="fas fa-envelope"></i> Email
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
+    <main class="main">
+        {{ content }}
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="mono muted">© {{ 'now' | date: "%Y" }} {{ site.author.name }} · built with Jekyll · <a href="{{ '/feed.xml' | relative_url }}"><i class="fas fa-rss"></i> rss</a></span>
+            <span class="footer-links">
+                {% if site.data.profile.github %}<a href="{{ site.data.profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>{% endif %}
+                {% if site.data.profile.linkedin %}<a href="{{ site.data.profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>{% endif %}
+                {% if site.data.profile.email %}<a href="mailto:{{ site.data.profile.email }}" aria-label="Email"><i class="fas fa-envelope"></i></a>{% endif %}
+            </span>
+        </div>
+    </footer>
+
+    <!-- Command palette -->
+    <div class="palette" id="palette" hidden>
+        <div class="palette-backdrop" data-close></div>
+        <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search">
+            <div class="palette-input-row">
+                <i class="fas fa-magnifying-glass muted"></i>
+                <input id="palette-input" type="text" placeholder="Search posts, pages, tags…" autocomplete="off" spellcheck="false">
+                <kbd>esc</kbd>
             </div>
+            <ul class="palette-results" id="palette-results"></ul>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            {{ content }}
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; {{ 'now' | date: "%Y" }} {{ site.author.name }}. Built with Jekyll.</p>
-        </div>
-    </footer>
+    <script>
+      window.SEARCH_INDEX = [
+        {"t":"Home","u":"{{ '/' | relative_url }}","k":"page"},
+        {"t":"Writing","u":"{{ '/blogs/' | relative_url }}","k":"page"},
+        {"t":"Projects","u":"{{ '/projects/' | relative_url }}","k":"page"},
+        {"t":"Resources","u":"{{ '/links/' | relative_url }}","k":"page"},
+        {"t":"CV","u":"{{ '/cv/' | relative_url }}","k":"page"}{% assign posts = site.blogs | sort: 'date' | reverse %}{% for p in posts %},
+        {"t":{{ p.title | jsonify }},"u":"{{ p.url | relative_url }}","k":"post","d":{{ p.summary | jsonify }},"g":{{ p.tags | join: ' ' | jsonify }}}{% endfor %}
+      ];
+    </script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
 </body>
 </html>

@@ -1,30 +1,40 @@
 # Site settings
 title: Roshan Raut
-description: Personal Portfolio
+description: "Platform & AI Infrastructure engineer. Writing about GPUs, Kubernetes, LLM serving, MLOps and FinOps for AI."
 url: "https://roshan-raut.github.io"
 baseurl: "/portfolio"
+lang: en
 
-# Profile information
 author:
   name: Roshan Raut
   username: roshan-raut
   avatar: /assets/images/Photo.jpg
-  bio: DevOps | AWS | Azure | Terraform | CKAD | Ansible
+  bio: Platform & AI Infrastructure Engineer
 
 # Build settings
 markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  hard_wrap: false
 permalink: pretty
 
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+feed:
+  collections:
+    - blogs
+
 # Collections
+# To publish a new post: add a Markdown file to _blogs/ with front matter
+# (title, date, summary, tags, optional series/part/featured). Nothing else to update.
 collections:
   blogs:
     output: true
-    permalink: /blogs/:title/
-  projects:
-    output: true
-    permalink: /projects/:title/
+    permalink: /blogs/:name/
 
-# Exclude from processing
 exclude:
   - Gemfile
   - Gemfile.lock
@@ -32,20 +42,10 @@ exclude:
   - vendor/
   - .github/
 
-# Default front matter
 defaults:
-  - scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
   - scope:
       path: ""
       type: "blogs"
     values:
-      layout: "blog"
-  - scope:
-      path: ""
-      type: "projects"
-    values:
-      layout: "project"
+      layout: "post"
+      author: "Roshan Raut"

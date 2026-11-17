@@ -1,54 +1,87 @@
 ---
-layout: default
-title: "Infra for AI – Part 10: FinOps for AI"
-date: 2026-04-05
-author: "Roshan Raut"
-slug: "infra-for-ai-10-finops-ai"
-tags:
-  - ai
-  - finops
-  - cloud
-  - cost-optimization
-summary: "The finale: Mastering the economics of AI. From fractional GPUs (MIG) to serverless patterns and cost observability."
+title: "Infra for AI – Part 10: FinOps for AI Infrastructure"
+short: "FinOps for AI"
+date: 2026-02-19
+updated: 2026-11-17
+series: "Infra for AI"
+part: 10
+featured: true
+summary: "Cost per token as the unit metric, GPU capacity strategy (spot, capacity blocks, reservations), utilization, model right-sizing, prompt caching and batch APIs."
+tags: [ai, finops, cloud, cost-optimization]
 ---
 
 ## Context
-A single NVIDIA H100 node can cost over $30,000 per month to rent in the cloud. As a DevOps Engineer, your value isn't just in making the system work; it's in making it **financially sustainable**. FinOps for AI is the practice of bringing fiscal accountability to the high-velocity world of Machine Learning.
 
-## 1. Spot vs. Reserved Economics
-The strategy for purchasing compute determines your "burn rate":
-    - **Reserved Instances (RI) / Savings Plans:** Best for 24/7 production inference. You commit to 1-3 years for a 40-60% discount.
-    - **Spot Instances:** Best for stateless training or batch processing. You get up to 90% off, but the cloud provider can reclaim the GPU at any time.
-    - **On-Demand:** The "Default" and most expensive. Only use this for short experiments or sudden traffic spikes.
+AI changed the shape of the cloud bill. A single 8-GPU node can cost more per month than an entire microservices platform, and API-based AI spend scales with every token your users generate. FinOps for AI is about one thing: **useful output per dollar**.
 
-## 2. MIG: Fractional GPUs
-Not every task needs a full A100 or H100. **MIG (Multi-Instance GPU)** allows you to partition a single physical GPU into up to seven separate hardware-isolated instances.
-    - **The Savings:** Instead of giving 7 developers their own GPU (expensive), you give them 7 MIG partitions on a single card (cheap).
-    - **Use Case:** Perfect for model development, testing, and small-scale inference where the model doesn't need 80GB of VRAM.
+## 1. Pick a unit metric
 
-## 3. Serverless GPU Patterns
-Serverless AI (e.g., RunPod, Modal, or AWS Lambda with GPU support) is the ultimate FinOps tool.
-- **Pay-per-millisecond:** You only pay when the code is actually running.
-- **The Trade-off:** "Cold Starts." When a request comes in, the provider has to pull your 10GB container and load the model into GPU memory.
+"GPU hours" tells you what you paid, not what you got. Track:
 
-## 4. Solving the Cold Start Challenge
-To make serverless or "Scale-to-Zero" viable, DevOps engineers use several tricks:
-    - **Base Image Caching:** Keeping the heavy CUDA layers "warm" on the host machine.
-    - **Streaming Model Weights:** Using specialized formats like `Safetensors` to start the model before the entire file is finished downloading.
-    - **Predictive Scaling:** Using historical data to spin up a GPU 5 minutes *before* the morning traffic spike hits.
+- **Cost per 1M tokens** (input and output separately) for serving.
+- **Cost per successful task** for agents (tokens × retries × tool calls).
+- **Cost per training/fine-tuning run** and per eval point gained.
+- **GPU utilization** — real *SM/tensor activity* from DCGM, not just "allocated".
 
-## 5. Cost Observability
-You cannot optimize what you cannot measure. Traditional cloud billing consoles are often too slow (24-hour delay).
-    - **GPU-Level Attribution:** Use tools like **KubeCost** or **NVIDIA DCGM Exporter** to see exactly which team or which specific "Project" is consuming GPU cycles.
-    - **Idle Detection:** Automate the shutdown of "Zombie" Jupyter notebooks. If a GPU has 0% utilization for more than 2 hours, kill the instance.
+Tag every GPU workload and every API key with team, product and environment. The **FOCUS** billing spec now covers AI/API usage, making cross-cloud and vendor reporting easier.
 
-## 6. Resource Quotas and Governance
-Implement "Guardrails" to prevent catastrophic billing errors:
-    - **Hard Quotas:** Set a limit on the number of GPUs a single namespace can request.
-    - **Time-to-Live (TTL):** Every experimental GPU node should have a TTL. After 8 hours, it should require a manual "Extend" click, or it gets deleted.
+## 2. Capacity strategy
 
-## Lessons Learned
-AI Infrastructure is a "High-Stakes" game. The difference between a junior and a senior AI Infrastructure Engineer is the ability to balance raw performance with cost-efficiency. By mastering MIG, Spot instances, and strict observability, you ensure that your AI projects grow into profitable products rather than expensive experiments.
+| Option | Good for | Watch out |
+|---|---|---|
+| **On-demand** | Spiky, short-lived | Highest price, availability not guaranteed |
+| **Spot / preemptible** | Batch inference, evals, fault-tolerant training with checkpoints | Interruptions; plan for them |
+| **Capacity Blocks (AWS) / DWS (GCP) / short-term reservations** | Scheduled training runs | Pay for the window whether you use it or not |
+| **1–3 yr reservations / Savings Plans** | Steady inference baseline | Lock-in as GPU generations move fast |
+| **Neoclouds** (CoreWeave, Lambda, Nebius, …) | Large GPU blocks at lower $/hr | Data egress, integration, another vendor |
+| **Managed APIs** (Claude, GPT, Gemini via Bedrock/Azure/Vertex) | Most product use cases | Per-token pricing at scale |
+
+GPU prices have fallen as Blackwell ramped — older-generation (H100/H200) capacity is often the best $/token for mid-size models. Re-check pricing every quarter.
+
+## 3. Raise utilization before buying more
+
+- **Right-size the GPU**: an 8B model doesn't need an H100 — L4/L40S-class GPUs or a MIG slice will do.
+- **Share GPUs** with MIG/MPS (Part 4) for small models and dev environments.
+- **Queue, don't over-provision**: Kueue quotas with borrowing keep expensive nodes busy.
+- **Scale to zero** for non-production endpoints; fast model loading makes it practical.
+- **Batch offline work** — bigger batches are dramatically cheaper per token.
+
+## 4. Make every token cheaper
+
+- **Quantize** (FP8 → FP4/INT4 where evals allow): fewer GPUs per replica.
+- **Prefix caching + KV-aware routing** (Part 7): skip redundant prefill.
+- **Speculative decoding**: more tokens per forward pass.
+- **Route by difficulty**: send easy requests to a small/cheap model (e.g. Claude Haiku-class) and reserve frontier models for hard ones.
+- **Distill or fine-tune** a small model once a task is well-understood.
+
+## 5. API-based AI is FinOps too
+
+If you call hosted models, most savings come from usage patterns, not infrastructure:
+
+- **Prompt caching** — providers such as Anthropic and OpenAI bill cached input tokens at a large discount; put stable content (system prompts, tool definitions, documents) first.
+- **Batch APIs** — asynchronous batch processing is typically ~50% cheaper for non-interactive work.
+- **Cap output length** and context size; trim chat history and retrieved chunks.
+- **Per-team budgets and rate limits** at an AI gateway, with alerts on anomalies (a looping agent can burn a month's budget overnight).
+
+## 6. A simple dashboard
+
+```text
+┌───────────────────────────┬───────────────────────────┐
+│ $ / 1M output tokens      │ GPU SM-active % by pool   │
+│ by model & team (trend)   │ (DCGM, p50/p95)           │
+├───────────────────────────┼───────────────────────────┤
+│ Idle allocated GPU-hours  │ Cache hit rate            │
+│ (allocated – active)      │ (prefix / prompt cache)   │
+├───────────────────────────┼───────────────────────────┤
+│ Spot interruption & retry │ Top 10 most expensive     │
+│ cost                      │ endpoints / agents        │
+└───────────────────────────┴───────────────────────────┘
+```
+
+## Lessons learned
+
+Measure **cost per token or per task**, not per GPU-hour. Buy capacity to match the workload's shape, push utilization up with sharing and queuing, and make each token cheaper with quantization, caching, routing and batching. Most AI cost wins are engineering decisions — which makes them a platform team's job.
 
 ---
-**Series Conclusion:** We have traveled from the raw silicon of Part 1 to the financial strategies of Part 10. The world of AI Infra is moving fast, but the fundamentals of DevOps—automation, observability, and scaling—remain your best tools for success.
+
+*This wraps up the Infra for AI series. Next up: hands-on posts on running LLM gateways, evaluating agents, and building with Claude and MCP on Kubernetes.*

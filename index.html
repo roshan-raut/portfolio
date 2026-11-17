@@ -1,102 +1,133 @@
 ---
 layout: default
-title: Overview
+title: Home
 permalink: /
 ---
+{% assign profile = site.data.profile %}
+{% assign posts = site.blogs | sort: "date" | reverse %}
 
-<div class="overview-page">
-    <section class="about-section">
-        <h2><i class="fas fa-user"></i> About Me</h2>
-        <div class="about-content" style="background: #f6f8fa; padding: 20px; border-radius: 6px; border: 1px solid #d0d7de;">
-            {{ site.data.profile.bio | markdownify }}
+<section class="container hero">
+    <div class="hero-copy">
+        <div class="status-pill mono"><span class="dot"></span> {{ site.data.experience[0].title }} @ {{ site.data.experience[0].organization | split: " " | first }} · {{ profile.location }}</div>
+        <h1 class="hero-title">
+            Building the <span class="grad">infrastructure</span><br>that runs AI in production.
+        </h1>
+        <p class="hero-sub">I'm {{ profile.name }} — a platform engineer working where Kubernetes, cloud and GPUs meet LLMs. I write field notes on serving models, scheduling accelerators and keeping AI costs sane.</p>
+        <div class="hero-cta">
+            <a class="btn btn-primary" href="{{ '/blogs/' | relative_url }}"><i class="fas fa-terminal"></i> Read the writing</a>
+            <a class="btn btn-ghost" href="{{ '/cv/' | relative_url }}"><i class="far fa-file-lines"></i> CV</a>
+            <a class="btn btn-icon" href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a class="btn btn-icon" href="{{ profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
         </div>
-    </section>
+    </div>
 
-    <section class="cv-section">
-        <h2><i class="fas fa-cogs"></i> Technical Skills</h2>
-        <div class="skills-cv">
-            {% for skill_group in site.data.profile.skills %}
-            <div class="skill-group-cv">
-                <h3>{{ skill_group.category }}</h3>
-                <div class="skill-tags">
-                    {% for skill in skill_group.items %}
-                    <span class="skill-tag">{{ skill }}</span>
-                    {% endfor %}
+    <div class="terminal" aria-label="Profile summary">
+        <div class="terminal-bar">
+            <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+            <span class="mono muted terminal-title">roshan@infra: ~</span>
+        </div>
+        <div class="terminal-body mono">
+            <div><span class="p">$</span> whoami</div>
+            <div class="out">{{ profile.name }} — {{ profile.tagline }}</div>
+            <div><span class="p">$</span> kubectl get focus -o wide</div>
+            <div class="out">
+                {% for f in profile.focus %}<div><span class="ok">●</span> {{ f }}</div>{% endfor %}
+            </div>
+            <div><span class="p">$</span> ls ~/writing | wc -l</div>
+            <div class="out">{{ site.blogs.size }}</div>
+            <div><span class="p">$</span> <span id="typed"></span><span class="caret"></span></div>
+        </div>
+    </div>
+</section>
+
+<section class="container stats-strip">
+    <div class="stat"><span class="stat-num mono">10+</span><span class="stat-label">years in engineering</span></div>
+    <div class="stat"><span class="stat-num mono">{{ site.data.certifications.size }}</span><span class="stat-label">certifications</span></div>
+    <div class="stat"><span class="stat-num mono">{{ site.blogs.size }}</span><span class="stat-label">deep-dive articles</span></div>
+    <div class="stat"><span class="stat-num mono">2</span><span class="stat-label">clouds in production</span></div>
+</section>
+
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">01.</span> Latest writing</h2>
+        <a class="link-arrow mono" href="{{ '/blogs/' | relative_url }}">all posts →</a>
+    </div>
+    <div class="card-grid three">
+        {% for post in posts limit: 3 %}
+        {% include post-card.html post=post %}
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">02.</span> About</h2>
+    </div>
+    <div class="about-grid">
+        <div class="prose about-prose">{{ profile.bio | markdownify }}</div>
+        <ul class="check-list">
+            {% for h in profile.highlights %}<li><i class="fas fa-check"></i> {{ h }}</li>{% endfor %}
+        </ul>
+    </div>
+</section>
+
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">03.</span> Experience</h2>
+        <a class="link-arrow mono" href="{{ '/cv/' | relative_url }}">full cv →</a>
+    </div>
+    <ol class="timeline">
+        {% for e in site.data.experience %}
+        <li class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+                <div class="timeline-top">
+                    <h3>{{ e.title }}</h3>
+                    <span class="mono muted small">{{ e.year }}</span>
                 </div>
+                <div class="muted">{{ e.organization }} · {{ e.location }}</div>
             </div>
-            {% endfor %}
-        </div>
-    </section>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
 
-    <section class="popular-projects">
-        <h2><i class="fas fa-star"></i> Featured Projects</h2>
-        <div class="projects-grid">
-            {% for project in site.data.projects %}
-            {% if project.featured %}
-            <div class="project-card">
-                <div class="project-header">
-                    <h3 class="project-title">
-                        <a href="{{ project.url }}" target="_blank">{{ project.name }}</a>
-                    </h3>
-                    <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
-                </div>
-                <p class="project-description">{{ project.description }}</p>
-                <div class="project-meta">
-                    <span class="project-language">
-                        <span class="language-dot" style="background-color: {% if project.language == 'Python' %}#3572A5{% elsif project.language == 'HCL / GitHub Actions' %}#844cb4{% elsif project.language == 'Kubernetes / Helm' %}#326ce5{% else %}#888{% endif %};"></span>
-                        {{ project.language }}
-                    </span>
-                </div>
-                <div class="project-topics">
-                    {% for topic in project.topics %}
-                    <span class="topic-tag">{{ topic }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            {% endfor %}
-        </div>
-        <div style="margin-top: 24px; text-align: right;">
-            <a href="{{ '/projects' | relative_url }}" class="view-all-link">
-                View all projects <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-    </section>
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">04.</span> Selected work</h2>
+        <a class="link-arrow mono" href="{{ '/projects/' | relative_url }}">all projects →</a>
+    </div>
+    <div class="card-grid three">
+        {% for project in site.data.projects %}{% if project.featured %}
+        {% include project-card.html project=project %}
+        {% endif %}{% endfor %}
+    </div>
+</section>
 
-    <section class="skills-section">
-        <h2><i class="fas fa-certificate"></i> Licenses & Certifications</h2>
-        <div class="skills-grid">
-            {% for cert in site.data.certifications %}
-            <div class="skill-category">
-                <h3 style="color: #0969da; margin-bottom: 8px; font-size: 16px;">{{ cert.title }}</h3>
-                <p style="font-size: 13px; color: #24292f; margin: 2px 0;">
-                    <strong><i class="fas fa-building"></i></strong> {{ cert.issuedby }}
-                </p>
-                <p style="font-size: 12px; color: #57606a;">
-                    <strong><i class="far fa-calendar-alt"></i></strong> {{ cert.issueddate }}
-                </p>
-            </div>
-            {% endfor %}
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">05.</span> Stack</h2>
+    </div>
+    <div class="stack-grid">
+        {% for group in profile.skills %}
+        <div class="stack-group">
+            <div class="mono muted small">// {{ group.category | downcase }}</div>
+            <div class="chips">{% for s in group.items %}<span class="chip">{{ s }}</span>{% endfor %}</div>
         </div>
-    </section>
+        {% endfor %}
+    </div>
+</section>
 
-    <section class="stats-section">
-        <h2><i class="fas fa-chart-line"></i> GitHub Statistics</h2>
-        <div class="stats-grid">
-            {% if site.data.profile.stats %}
-            <div class="stat-card">
-                <div class="stat-number">{{ site.data.profile.stats.repositories }}</div>
-                <div class="stat-label">Repositories</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ site.data.profile.stats.contributions_this_year }}</div>
-                <div class="stat-label">Contributions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ site.data.profile.stats.years_on_github }}</div>
-                <div class="stat-label">Years on GitHub</div>
-            </div>
-            {% endif %}
+<section class="container section">
+    <div class="section-head">
+        <h2><span class="mono accent">06.</span> Certifications</h2>
+    </div>
+    <div class="cert-grid">
+        {% for cert in site.data.certifications %}
+        <div class="cert {% if cert.issueddate contains "Expired" %}cert-expired{% endif %}">
+            <div class="cert-title">{{ cert.title }}</div>
+            <div class="mono muted small">{{ cert.issuedby }} · {{ cert.issueddate }}</div>
         </div>
-    </section>
-</div>
+        {% endfor %}
+    </div>
+</section>

@@ -1,52 +1,91 @@
 ---
-layout: default
-title: "Infra for AI – Part 7: Model Serving"
-date: 2026-03-15
-author: "Roshan Raut"
-slug: "infra-for-ai-07-model-serving"
-tags:
-  - ai
-  - inference
-  - kubernetes
-  - scaling
-summary: "Beyond training: Mastering real-time inference, model servers like vLLM, and token-based autoscaling in production."
+title: "Infra for AI – Part 7: Model Serving & Inference Infrastructure"
+short: "Model serving"
+date: 2026-02-13
+updated: 2026-11-17
+series: "Infra for AI"
+part: 7
+featured: true
+summary: "vLLM, SGLang and TensorRT-LLM; KV-cache-aware routing with llm-d and the Gateway API Inference Extension; prefill/decode disaggregation; and autoscaling on the metrics that matter."
+tags: [ai, inference, kubernetes, vllm, scaling]
 ---
 
 ## Context
-Deploying an AI model for users is fundamentally different from deploying a web app. You aren't just serving HTML; you are running a massive neural network for every request. If your serving stack is unoptimized, your users will see "streaming" text that crawls, and your GPU bill will explode.
 
-## 1. Real-time vs. Batch Inference
-  - **Real-time (Online):** High pressure on latency. Users expect immediate responses (e.g., Chatbots). Requires "Always-on" GPUs.
-  - **Batch (Offline):** High pressure on cost-efficiency. Processing millions of rows at once (e.g., Sentiment analysis on logs). Can use Spot Instances and "Scale-to-zero" logic.
+Inference is where AI spend lives in 2026. Training is a project; inference is a **24/7 production service** with latency SLOs, bursty traffic and a GPU bill that scales with usage. A FastAPI wrapper around `transformers` will not survive contact with real users.
 
-## 2. The Modern Inference Stack: TGI, vLLM, and Triton
-Standard Flask or FastAPI wrappers are too slow for LLMs. We use specialized "Model Servers":
+## 1. The metrics that matter
 
-  - **vLLM:** The current gold standard for LLMs. It uses **PagedAttention**, which manages KV cache memory so efficiently that it can handle 24x higher throughput than standard transformers.
-  - **TGI (Text Generation Inference):** Developed by Hugging Face. Highly optimized for production-grade streaming and quantization.
-  - **NVIDIA Triton:** The "Swiss Army Knife." It can serve multiple models (PyTorch, ONNX, TensorRT) on the same GPU simultaneously.
+| Metric | Meaning | Users feel it as |
+|---|---|---|
+| **TTFT** — time to first token | Queue wait + prefill | "Is it thinking?" |
+| **ITL / TPOT** — inter-token latency | Decode speed per stream | Streaming smoothness |
+| **Throughput** (tok/s per GPU) | Efficiency | Your cost per token |
+| **KV-cache utilization** | Memory left for more requests | Hidden capacity limit |
 
-## 3. Token-Based Autoscaling
-Traditional DevOps autoscales on CPU/RAM. In AI, these metrics are deceptive because a GPU will always look "busy" even if it's just idling with a loaded model.
+Prefill (processing the prompt) is **compute-bound**; decode (generating tokens) is **memory-bandwidth-bound**. Almost every modern optimization exploits that difference.
 
-Instead, we autoscale based on **Inference Metrics**:
-  - **Time Per Output Token (TPOT):** How fast the words are appearing for the user.
-  - **Queue Depth:** How many requests are waiting for a "Slot" on the GPU.
-  - **KV Cache Usage:** If memory is full, we need a new replica.
+## 2. The engines
 
-## 4. Latency Optimization Patterns
-To make your AI feel "snappy," DevOps engineers implement several patterns:
+- **vLLM** — the default open-source engine. PagedAttention, continuous batching, prefix caching, speculative decoding, FP8/FP4 quantization, and broad hardware support (NVIDIA, AMD, TPU, Trainium, Gaudi).
+- **SGLang** — RadixAttention prefix cache and strong structured-output/agent performance; very competitive on DeepSeek-style MoE models.
+- **TensorRT-LLM** — NVIDIA's compiled path for maximum performance on NVIDIA hardware.
+- **NVIDIA Dynamo** — a distributed serving framework that orchestrates engines (vLLM, SGLang, TRT-LLM) with disaggregation and KV-cache management.
+- **Triton Inference Server / KServe** — still great for classic ML models and multi-framework serving.
 
-  - **Continuous Batching:** Instead of waiting for one request to finish, the server "inserts" new requests into the GPU mid-computation.
-  - **Quantization (FP8/INT4):** Reducing the precision of model weights to make them smaller. This allows you to fit a 70B model on a single A100 instead of needing two.
-  - **Speculative Decoding:** Using a tiny, fast model to predict what the big model will say, significantly speeding up the "Time to First Token."
+```bash
+vllm serve meta-llama/Llama-3.3-70B-Instruct \
+  --tensor-parallel-size 4 \
+  --quantization fp8 \
+  --enable-prefix-caching \
+  --max-model-len 32768
+```
 
+Everything speaks the **OpenAI-compatible API**, so swapping engines is cheap.
 
+## 3. Routing is the new load balancing
 
-## 5. Production Challenges
-  1. **Model Loading (Cold Starts):** A 140GB model takes minutes to pull from S3. We use **P2P streaming** or "warm" nodes to ensure users don't wait for a container to pull.
-  2. **GPU Memory Fragmentation:** Long conversations eat up "KV Cache." If not managed, the system will crash with an OOM even if the model itself fits.
-  3. **Streaming Responses:** Implementing Server-Sent Events (SSE) so users see the answer as it is generated, rather than waiting 30 seconds for the whole block.
+Round-robin is wrong for LLMs. A request whose prefix (system prompt, document, chat history) is already cached on replica B should go to B — it skips most of the prefill.
 
-## Lessons Learned
-Model serving is about the balance between **User Experience (Latency)** and **Operational Cost (Throughput)**. By moving away from generic web servers and adopting specialized inference engines like vLLM, you can serve more users with fewer GPUs, directly impacting the bottom line.
+- **Gateway API Inference Extension (GAIE)** — the Kubernetes standard for inference-aware routing. An `InferencePool` plus an endpoint picker scores replicas on queue depth, KV-cache usage, prefix-cache hits and LoRA adapters loaded. Works with Envoy-based gateways (kgateway, Istio, GKE Gateway).
+- **llm-d** — a Kubernetes-native distributed inference stack on top of vLLM, donated to the **CNCF (Sandbox) in 2026**. It bundles KV-cache-aware routing, prefill/decode disaggregation and well-lit deployment paths.
+
+## 4. Prefill/decode disaggregation
+
+Because prefill and decode have different bottlenecks, large deployments split them onto **separate GPU pools** and transfer the KV cache between them (via NIXL over RDMA/NVLink). You size each pool independently and stop long prompts from stalling everyone else's token stream. It's worth it at scale — overkill for a single small model.
+
+## 5. Autoscaling on the right signal
+
+GPU utilization is a terrible scaling metric — a loaded model looks "busy" while idle. Scale on **queue depth and latency**:
+
+```yaml
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-llama
+spec:
+  scaleTargetRef:
+    name: vllm-llama
+  minReplicaCount: 1
+  maxReplicaCount: 8
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus.monitoring:9090
+      query: sum(vllm:num_requests_waiting{model_name="llama-70b"})
+      threshold: "10"
+```
+
+Pair it with **fast model loading** (Part 6), or a scale-up will arrive after the spike is over.
+
+## 6. Production checklist
+
+- Separate **interactive** and **batch** traffic (different pools/priorities).
+- Set **max context length** deliberately — it caps concurrency via KV memory.
+- Use **multi-LoRA** serving instead of one deployment per fine-tune.
+- Emit **OpenTelemetry GenAI** traces and per-tenant token counts.
+- Put an **AI gateway** in front (auth, rate limits, quotas, fallback across self-hosted and API models like Claude or GPT).
+
+## Lessons learned
+
+Serving LLMs well is about **memory and routing**: keep the KV cache hot, route requests to where their prefix already lives, and scale on queue depth — not CPU, not GPU utilization.

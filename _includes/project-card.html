@@ -1,0 +1,10 @@
+{% assign pr = include.project %}
+<a class="card project-card" href="{{ pr.url }}" target="_blank" rel="noopener">
+    <div class="card-top mono small">
+        <span class="accent"><i class="far fa-folder-open"></i> {{ pr.stack }}</span>
+        <i class="fas fa-arrow-up-right-from-square muted"></i>
+    </div>
+    <h3 class="card-title">{{ pr.name }}</h3>
+    <p class="card-text">{{ pr.description }}</p>
+    <div class="chips small">{% for t in pr.topics %}<span class="chip">{{ t }}</span>{% endfor %}</div>
+</a>
