@@ -9,6 +9,7 @@ back_label: "cd ../namaste-dutch"
 last_updated: 2026-11-17
 summary: "Namaste Dutch does not collect, store on a server, or share any personal data."
 ---
+{% assign app = site.data.apps | where: "slug", "namaste-dutch" | first %}
 
 This privacy policy explains how the **Namaste Dutch** mobile app for iOS and Android ("the app") handles your information. The app is developed and published by **Roshan Raut**, an individual developer based in the Netherlands ("I", "me").
 
@@ -69,5 +70,5 @@ If the app changes in a way that affects your privacy — for example, if a futu
 Questions about this policy or the app:
 
 **Roshan Raut**  
-Email: [{{ site.data.profile.email }}](mailto:{{ site.data.profile.email }}?subject=Namaste%20Dutch%20privacy)  
+Email: [{{ app.contact_email }}](mailto:{{ app.contact_email }}?subject=Namaste%20Dutch%20privacy)  
 Netherlands

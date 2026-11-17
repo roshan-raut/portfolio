@@ -8,12 +8,13 @@ back_url: /apps/namaste-dutch/
 back_label: "cd ../namaste-dutch"
 summary: "Help with Namaste Dutch, and how to reach me."
 ---
+{% assign app = site.data.apps | where: "slug", "namaste-dutch" | first %}
 
 ## Contact
 
 Found a bug, spotted a mistake in a lesson or translation, or have an idea? Email me — I read every message.
 
-**Email:** [{{ site.data.profile.email }}](mailto:{{ site.data.profile.email }}?subject=Namaste%20Dutch%20support)
+**Email:** [{{ app.contact_email }}](mailto:{{ app.contact_email }}?subject=Namaste%20Dutch%20support)
 
 To help me fix problems quickly, please include:
 

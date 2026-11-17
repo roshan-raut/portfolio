@@ -8,6 +8,7 @@ back_url: /apps/
 back_label: "cd ../apps"
 summary: "Learn Dutch (Nederlands) in English, Hindi, Marathi, Tamil or Telugu — from your first words to the A2 inburgering exam."
 ---
+{% assign app = site.data.apps | where: "slug", "namaste-dutch" | first %}
 
 Namaste Dutch is a Dutch course for people who think in an Indian language. Every screen, lesson, tip and exam explanation switches to your own language and script.
 
@@ -26,4 +27,4 @@ No account, no ads, no tracking. Your progress stays on your phone. Read the ful
 
 ## Need help?
 
-See the [support page]({{ '/apps/namaste-dutch/support/' | relative_url }}) or email [{{ site.data.profile.email }}](mailto:{{ site.data.profile.email }}?subject=Namaste%20Dutch).
+See the [support page]({{ '/apps/namaste-dutch/support/' | relative_url }}) or email [{{ app.contact_email }}](mailto:{{ app.contact_email }}?subject=Namaste%20Dutch).

@@ -6,3 +6,4 @@
   tagline: "Learn Dutch in English, Hindi, Marathi, Tamil or Telugu — from A1 to the A2 inburgering exam."
   platforms: [iOS, Android]
   bundle_id: "com.namastedutch.app"
+  contact_email: "rozen8685@gmail.com"   # must match the developer email in Play Console / App Store Connect
